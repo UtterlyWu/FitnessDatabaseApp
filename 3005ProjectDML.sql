@@ -1,10 +1,18 @@
+CREATE TABLE public.FitnessRoutines(
+	routine_id	SERIAL,
+	title		VARCHAR(255),
+	description	TEXT,
+	category	VARCHAR(30),
+	
+	PRIMARY KEY(routine_id)
+);
+
 CREATE TABLE public.Members(
 	member_id	SERIAL,
 	username	VARCHAR(80)	NOT NULL,
 	pword		VARCHAR(80)	NOT NULL,
 	first_name	VARCHAR(80)	NOT NULL,
 	last_name	VARCHAR(80)	NOT NULL,
-	sex			VARCHAR(15),
 	
 	current_weight	float(2),
 	desired_weight	float(2),
@@ -16,16 +24,7 @@ CREATE TABLE public.Members(
 	
 	PRIMARY KEY(member_id),
 	FOREIGN KEY(routine_id) REFERENCES FitnessRoutines(routine_id)
-)
-
-CREATE TABLE public.AdminStaff(
-	admin_id	SERIAL,
-	first_name	VARCHAR(80)	NOT NULL,
-	last_name	VARCHAR(80)	NOT NULL,
-	position	VARCHAR(80) NOT NULL
-
-	PRIMARY KEY(trainer_id)
-)
+);
 
 CREATE TABLE public.Trainers(
 	trainer_id	SERIAL,
@@ -33,14 +32,23 @@ CREATE TABLE public.Trainers(
 	last_name	VARCHAR(80)	NOT NULL,
 
 	PRIMARY KEY(trainer_id)
-)
+);
+
+CREATE TABLE public.AdminStaff(
+	admin_id	SERIAL,
+	first_name	VARCHAR(80)	NOT NULL,
+	last_name	VARCHAR(80)	NOT NULL,
+	position	VARCHAR(80) NOT NULL,
+
+	PRIMARY KEY(admin_id)
+);
 
 CREATE TABLE public.Rooms(
 	room_number		INT NOT NULL,
 	name		VARCHAR(80)	NOT NULL,
 
 	PRIMARY KEY(room_number)
-)
+);
 
 CREATE TABLE public.Sessions(
 	session_id	SERIAL,
@@ -51,18 +59,9 @@ CREATE TABLE public.Sessions(
 	date		DATE			NOT NULL,
 	
 	PRIMARY KEY(session_id),
-	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainers_id),
+	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id),
 	FOREIGN KEY(room_number) REFERENCES Rooms(room_number)
-)
-
-CREATE TABLE public.FitnessRoutines(
-	routine_id	SERIAL,
-	title		VARCHAR(255),
-	description	TEXT,
-	category	VARCHAR(30),
-	
-	PRIMARY KEY(routine_id)
-)
+);
 
 CREATE TABLE public.Billings(
 	bill_id		SERIAL,
@@ -72,7 +71,7 @@ CREATE TABLE public.Billings(
 	
 	PRIMARY KEY(bill_id),
 	FOREIGN KEY(member_id) REFERENCES Members(member_id)
-)
+);
 
 CREATE TABLE public.Registrations(
 	session_id INT,
@@ -80,7 +79,7 @@ CREATE TABLE public.Registrations(
 
 	FOREIGN KEY(session_id) REFERENCES Sessions(session_id),
 	FOREIGN KEY(member_id) REFERENCES Members(member_id)
-)
+);
 
 CREATE TABLE public.Machines(
 	machine_id	SERIAL,
@@ -89,7 +88,7 @@ CREATE TABLE public.Machines(
 	room_number	INT,
 	
 	FOREIGN KEY(room_number) REFERENCES Rooms(room_number)
-)
+);
 
 CREATE TABLE public.Availability(
 	date		DATE,
@@ -97,4 +96,4 @@ CREATE TABLE public.Availability(
 	
 	PRIMARY KEY(date, trainer_id),
 	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id)
-)
+);
