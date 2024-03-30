@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS public.FitnessRoutines CASCADE;
+DROP TABLE IF EXISTS public.Members CASCADE;
+DROP TABLE IF EXISTS public.Trainers CASCADE;
+DROP TABLE IF EXISTS public.AdminStaff CASCADE;
+DROP TABLE IF EXISTS public.Rooms CASCADE;
+DROP TABLE IF EXISTS public.Sessions CASCADE;
+DROP TABLE IF EXISTS public.Billings CASCADE;
+DROP TABLE IF EXISTS public.Machines CASCADE;
+DROP TABLE IF EXISTS public.Availability CASCADE;
+DROP TABLE IF EXISTS public.Registrations CASCADE;
+
 CREATE TABLE public.FitnessRoutines(
 	routine_id	SERIAL,
 	title		VARCHAR(255),
@@ -28,6 +39,8 @@ CREATE TABLE public.Members(
 
 CREATE TABLE public.Trainers(
 	trainer_id	SERIAL,
+	username	VARCHAR(80)	NOT NULL,
+	pword		VARCHAR(80)	NOT NULL,
 	first_name	VARCHAR(80)	NOT NULL,
 	last_name	VARCHAR(80)	NOT NULL,
 
@@ -36,6 +49,8 @@ CREATE TABLE public.Trainers(
 
 CREATE TABLE public.AdminStaff(
 	admin_id	SERIAL,
+	username	VARCHAR(80)	NOT NULL,
+	pword		VARCHAR(80)	NOT NULL,
 	first_name	VARCHAR(80)	NOT NULL,
 	last_name	VARCHAR(80)	NOT NULL,
 	position	VARCHAR(80) NOT NULL,
