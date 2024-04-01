@@ -37,6 +37,9 @@
             label4 = new Label();
             Register = new Button();
             ErrorText = new Label();
+            Option_Member = new CheckBox();
+            Option_Trainer = new CheckBox();
+            Option_Admin = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -119,11 +122,47 @@
             ErrorText.TabIndex = 8;
             ErrorText.Text = "\\";
             // 
+            // Option_Member
+            // 
+            Option_Member.AutoSize = true;
+            Option_Member.Location = new Point(47, 50);
+            Option_Member.Name = "Option_Member";
+            Option_Member.Size = new Size(87, 24);
+            Option_Member.TabIndex = 9;
+            Option_Member.Text = "Member";
+            Option_Member.UseVisualStyleBackColor = true;
+            Option_Member.CheckedChanged += Option_Member_CheckedChanged;
+            // 
+            // Option_Trainer
+            // 
+            Option_Trainer.AutoSize = true;
+            Option_Trainer.Location = new Point(140, 50);
+            Option_Trainer.Name = "Option_Trainer";
+            Option_Trainer.Size = new Size(76, 24);
+            Option_Trainer.TabIndex = 10;
+            Option_Trainer.Text = "Trainer";
+            Option_Trainer.UseVisualStyleBackColor = true;
+            Option_Trainer.CheckedChanged += Option_Trainer_CheckedChanged;
+            // 
+            // Option_Admin
+            // 
+            Option_Admin.AutoSize = true;
+            Option_Admin.Location = new Point(222, 50);
+            Option_Admin.Name = "Option_Admin";
+            Option_Admin.Size = new Size(75, 24);
+            Option_Admin.TabIndex = 11;
+            Option_Admin.Text = "Admin";
+            Option_Admin.UseVisualStyleBackColor = true;
+            Option_Admin.CheckedChanged += Option_Admin_CheckedChanged;
+            // 
             // LoginForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(441, 285);
+            Controls.Add(Option_Admin);
+            Controls.Add(Option_Trainer);
+            Controls.Add(Option_Member);
             Controls.Add(ErrorText);
             Controls.Add(Register);
             Controls.Add(label4);
@@ -150,5 +189,8 @@
         private Label label4;
         private Button Register;
         private Label ErrorText;
+        private CheckBox Option_Member;
+        private CheckBox Option_Trainer;
+        private CheckBox Option_Admin;
     }
 }
