@@ -36,6 +36,7 @@
             login = new Button();
             label4 = new Label();
             Register = new Button();
+            ErrorText = new Label();
             SuspendLayout();
             // 
             // label1
@@ -87,6 +88,7 @@
             login.TabIndex = 5;
             login.Text = "Login";
             login.UseVisualStyleBackColor = true;
+            login.Click += login_Click;
             // 
             // label4
             // 
@@ -107,11 +109,22 @@
             Register.UseVisualStyleBackColor = true;
             Register.Click += Register_Click;
             // 
+            // ErrorText
+            // 
+            ErrorText.AutoSize = true;
+            ErrorText.ForeColor = Color.Red;
+            ErrorText.Location = new Point(149, 182);
+            ErrorText.Name = "ErrorText";
+            ErrorText.Size = new Size(15, 20);
+            ErrorText.TabIndex = 8;
+            ErrorText.Text = "\\";
+            // 
             // LoginForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(441, 285);
+            Controls.Add(ErrorText);
             Controls.Add(Register);
             Controls.Add(label4);
             Controls.Add(login);
@@ -136,5 +149,6 @@
         private Button login;
         private Label label4;
         private Button Register;
+        private Label ErrorText;
     }
 }
