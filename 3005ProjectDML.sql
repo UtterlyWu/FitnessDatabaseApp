@@ -80,7 +80,7 @@ CREATE TABLE public.Sessions(
 
 CREATE TABLE public.Billings(
 	bill_id		SERIAL,
-	amount		INT,
+	amount		float(2),
 	member_id	INT,
 	card_number	INT,
 	
