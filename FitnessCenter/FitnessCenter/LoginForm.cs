@@ -21,24 +21,48 @@ namespace FitnessCenter
         {
             DBConnection conn = new DBConnection();
 
-            Task<IEnumerable<Member>> q = conn.LoginMember(usernameTB.Text, passwordTB.Text);
+            String account_type = "";
+            if (Option_Member.Checked)
+            {
+                account_type = "members";
+            }
+            else if (Option_Trainer.Checked) {
+                account_type = "trainers";
+            }
+            else if (Option_Admin.Checked)
+            {
+                account_type = "adminstaff";
+            }
+            Account q= await conn.LoginAccount(usernameTB.Text, passwordTB.Text, account_type);
+
             //Account does not exist
-            IEnumerable<Member> t = await q;
-            if (t == null)
+            if (q == null)
             {
-                ErrorText.Text = "Error";
+                ErrorText.Text = "Unable to login, try again.";
                 return;
             }
-            if (!t.Any())
+            else if (q.account_type == "members")
             {
-                ErrorText.Text = "Username or Password incorrect";
+                //open member form
                 return;
             }
-
-            ErrorText.Text = "We good";
-            ErrorText.Text = t.First().first_name;
-
-
+            else if (q.account_type == "trainers")
+            {
+                TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
+                trnform.Show();
+                this.Close();
+                return;
+            }
+            else if (q.account_type == "adminstaff")
+            {
+                //open admin form
+                return;
+            }
+            else
+            {
+                ErrorText.Text = "Unable to login, try again.";
+                return;
+            }
         }
 
         private void Option_Member_CheckedChanged(object sender, EventArgs e)

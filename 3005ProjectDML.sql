@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS public.FitnessRoutines CASCADE;
+DROP TABLE IF EXISTS public.Accounts CASCADE;
 DROP TABLE IF EXISTS public.Members CASCADE;
 DROP TABLE IF EXISTS public.Trainers CASCADE;
 DROP TABLE IF EXISTS public.AdminStaff CASCADE;
@@ -18,6 +19,16 @@ CREATE TABLE public.FitnessRoutines(
 	PRIMARY KEY(routine_id)
 );
 
+CREATE TABLE public.Accounts(
+	username	VARCHAR(80)	NOT NULL,
+	pword		VARCHAR(80)	NOT NULL,
+	first_name	VARCHAR(80)	NOT NULL,
+	last_name	VARCHAR(80)	NOT NULL,
+	account_type	VARCHAR(10)	DEFAULT 'NONE',
+
+	PRIMARY KEY(username, pword, first_name, last_name)
+);
+
 CREATE TABLE public.Members(
 	member_id	SERIAL,
 	username	VARCHAR(80)	NOT NULL,
@@ -34,7 +45,8 @@ CREATE TABLE public.Members(
 	desired_date	DATE,
 	
 	PRIMARY KEY(member_id),
-	FOREIGN KEY(routine_id) REFERENCES FitnessRoutines(routine_id)
+	FOREIGN KEY(routine_id) REFERENCES FitnessRoutines(routine_id),
+	FOREIGN KEY(username, pword, first_name, last_name) REFERENCES Accounts(username, pword, first_name, last_name)
 );
 
 CREATE TABLE public.Trainers(
@@ -44,7 +56,8 @@ CREATE TABLE public.Trainers(
 	first_name	VARCHAR(80)	NOT NULL,
 	last_name	VARCHAR(80)	NOT NULL,
 
-	PRIMARY KEY(trainer_id)
+	PRIMARY KEY(trainer_id),
+	FOREIGN KEY(username, pword, first_name, last_name) REFERENCES Accounts(username, pword, first_name, last_name)
 );
 
 CREATE TABLE public.AdminStaff(
@@ -55,7 +68,8 @@ CREATE TABLE public.AdminStaff(
 	last_name	VARCHAR(80)	NOT NULL,
 	position	VARCHAR(80) NOT NULL,
 
-	PRIMARY KEY(admin_id)
+	PRIMARY KEY(admin_id),
+	FOREIGN KEY(username, pword, first_name, last_name) REFERENCES Accounts(username, pword, first_name, last_name)
 );
 
 CREATE TABLE public.Rooms(
@@ -112,3 +126,28 @@ CREATE TABLE public.Availability(
 	PRIMARY KEY(date, trainer_id),
 	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id)
 );
+
+CREATE OR REPLACE FUNCTION insert_into_accounts()
+RETURNS TRIGGER AS 
+$$
+BEGIN
+	IF (TG_TABLE_NAME = 'members' OR TG_TABLE_NAME = 'trainers' OR TG_TABLE_NAME = 'adminstaff') THEN
+		-- RAISE NOTICE '%', TG_TABLE_NAME;
+		INSERT INTO Accounts(username, pword, first_name, last_name, account_type)
+		VALUES (NEW.username, NEW.pword, NEW.first_name, NEW.last_name, TG_TABLE_NAME);
+    END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_insert_from_members
+BEFORE INSERT ON Members
+	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();
+
+CREATE TRIGGER trigger_insert_from_trainers
+BEFORE INSERT ON Trainers
+	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();
+
+CREATE TRIGGER trigger_insert_from_admin
+BEFORE INSERT ON AdminStaff
+	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();

@@ -9,10 +9,13 @@ namespace FitnessCenter
         [STAThread]
         static void Main()
         {
+            bool exit = false;
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new LoginForm());
+            LoginForm loginfrm = new LoginForm();
+            loginfrm.Show();
+            Application.Run();
         }
     }
 }
