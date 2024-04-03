@@ -35,7 +35,6 @@ namespace FitnessCenter
             }
             Account q= await conn.LoginAccount(usernameTB.Text, passwordTB.Text, account_type);
 
-            //Account does not exist
             if (q == null)
             {
                 ErrorText.Text = "Unable to login, try again.";
