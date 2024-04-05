@@ -141,5 +141,43 @@ namespace FitnessCenter
             }
 
         }
+
+        public async Task<Member> getMember(string username)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT * FROM public.Members WHERE username='{username}'";
+
+                Member result;
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                result = new Member(
+                        Username: reader.GetString(reader.GetOrdinal("username")),
+                        Password: reader.GetString(reader.GetOrdinal("pword")),
+                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                        Joined_date: reader.GetDateTime(reader.GetOrdinal("joined_date")).ToString("yyyy-MM-dd"),
+                        Sex: reader.GetString(reader.GetOrdinal("sex")),
+                        Member_id: reader.GetInt32(reader.GetOrdinal("member_id")),
+                        Current_weight: reader.GetFloat(reader.GetOrdinal("current_weight")),
+                        Desired_weight: reader.GetFloat(reader.GetOrdinal("desired_weight")),
+                        Height: reader.GetFloat(reader.GetOrdinal("height")));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+        }
     }
 }

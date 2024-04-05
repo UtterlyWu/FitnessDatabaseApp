@@ -28,59 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            MemberIDTextBox = new TextBox();
-            label1 = new Label();
-            label2 = new Label();
+            usernameTextBox = new TextBox();
+            nameLabel = new Label();
             label4 = new Label();
-            label5 = new Label();
-            label6 = new Label();
-            label7 = new Label();
-            label3 = new Label();
-            label8 = new Label();
-            label9 = new Label();
+            curWeightLabel = new Label();
+            sexLabel = new Label();
+            desiredWeightLabel = new Label();
+            joinDateLabel = new Label();
+            heightLabel = new Label();
             listBox1 = new ListBox();
-            button1 = new Button();
-            dateTimePicker1 = new DateTimePicker();
-            richTextBox1 = new RichTextBox();
+            submitUsername = new Button();
             label10 = new Label();
             label11 = new Label();
-            label12 = new Label();
-            textBox2 = new TextBox();
             label13 = new Label();
-            label14 = new Label();
             label15 = new Label();
-            button2 = new Button();
+            tabControl1 = new TabControl();
+            tabPage1 = new TabPage();
+            label2 = new Label();
+            textBox1 = new TextBox();
+            submitAchievement = new Button();
+            richTextBox1 = new RichTextBox();
+            tabPage2 = new TabPage();
             usernameLabel = new Label();
-            label16 = new Label();
-            listBox2 = new ListBox();
-            label18 = new Label();
+            openFileDialog1 = new OpenFileDialog();
+            label3 = new Label();
+            logout = new Button();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
             SuspendLayout();
             // 
-            // MemberIDTextBox
+            // usernameTextBox
             // 
-            MemberIDTextBox.Location = new Point(544, 89);
-            MemberIDTextBox.Name = "MemberIDTextBox";
-            MemberIDTextBox.Size = new Size(150, 23);
-            MemberIDTextBox.TabIndex = 0;
-            MemberIDTextBox.TextChanged += MemberIDTextBox_TextChanged;
+            usernameTextBox.Location = new Point(346, 46);
+            usernameTextBox.Name = "usernameTextBox";
+            usernameTextBox.Size = new Size(150, 23);
+            usernameTextBox.TabIndex = 0;
+            usernameTextBox.Text = "Member username...";
+            usernameTextBox.TextChanged += MemberIDTextBox_TextChanged;
             // 
-            // label1
+            // nameLabel
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(544, 60);
-            label1.Name = "label1";
-            label1.Size = new Size(66, 15);
-            label1.TabIndex = 1;
-            label1.Text = "Member ID";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(544, 122);
-            label2.Name = "label2";
-            label2.Size = new Size(42, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Name:";
+            nameLabel.AutoSize = true;
+            nameLabel.Location = new Point(346, 71);
+            nameLabel.Name = "nameLabel";
+            nameLabel.Padding = new Padding(0, 10, 0, 10);
+            nameLabel.Size = new Size(42, 35);
+            nameLabel.TabIndex = 2;
+            nameLabel.Text = "Name:";
             // 
             // label4
             // 
@@ -90,99 +84,82 @@
             label4.Size = new Size(0, 15);
             label4.TabIndex = 4;
             // 
-            // label5
+            // curWeightLabel
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(544, 174);
-            label5.Name = "label5";
-            label5.Size = new Size(88, 15);
-            label5.TabIndex = 5;
-            label5.Text = "Current Weight";
+            curWeightLabel.AutoSize = true;
+            curWeightLabel.Location = new Point(346, 131);
+            curWeightLabel.Name = "curWeightLabel";
+            curWeightLabel.Padding = new Padding(0, 0, 0, 10);
+            curWeightLabel.Size = new Size(91, 25);
+            curWeightLabel.TabIndex = 5;
+            curWeightLabel.Text = "Current Weight:";
             // 
-            // label6
+            // sexLabel
             // 
-            label6.AutoSize = true;
-            label6.Location = new Point(544, 148);
-            label6.Name = "label6";
-            label6.Size = new Size(28, 15);
-            label6.TabIndex = 6;
-            label6.Text = "Sex:";
+            sexLabel.AutoSize = true;
+            sexLabel.Location = new Point(346, 106);
+            sexLabel.Name = "sexLabel";
+            sexLabel.Padding = new Padding(0, 0, 0, 10);
+            sexLabel.Size = new Size(28, 25);
+            sexLabel.TabIndex = 6;
+            sexLabel.Text = "Sex:";
             // 
-            // label7
+            // desiredWeightLabel
             // 
-            label7.AutoSize = true;
-            label7.Location = new Point(544, 201);
-            label7.Name = "label7";
-            label7.Size = new Size(87, 15);
-            label7.TabIndex = 7;
-            label7.Text = "Desired Weight";
+            desiredWeightLabel.AutoSize = true;
+            desiredWeightLabel.Location = new Point(346, 156);
+            desiredWeightLabel.Name = "desiredWeightLabel";
+            desiredWeightLabel.Padding = new Padding(0, 0, 0, 10);
+            desiredWeightLabel.Size = new Size(90, 25);
+            desiredWeightLabel.TabIndex = 7;
+            desiredWeightLabel.Text = "Desired Weight:";
             // 
-            // label3
+            // joinDateLabel
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(544, 228);
-            label3.Name = "label3";
-            label3.Size = new Size(58, 15);
-            label3.TabIndex = 8;
-            label3.Text = "Join Date:";
+            joinDateLabel.AutoSize = true;
+            joinDateLabel.Location = new Point(346, 181);
+            joinDateLabel.Name = "joinDateLabel";
+            joinDateLabel.Padding = new Padding(0, 0, 0, 10);
+            joinDateLabel.Size = new Size(58, 25);
+            joinDateLabel.TabIndex = 8;
+            joinDateLabel.Text = "Join Date:";
             // 
-            // label8
+            // heightLabel
             // 
-            label8.AutoSize = true;
-            label8.Location = new Point(544, 254);
-            label8.Name = "label8";
-            label8.Size = new Size(75, 15);
-            label8.TabIndex = 9;
-            label8.Text = "Desired date:";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(544, 280);
-            label9.Name = "label9";
-            label9.Size = new Size(46, 15);
-            label9.TabIndex = 10;
-            label9.Text = "Height:";
+            heightLabel.AutoSize = true;
+            heightLabel.Location = new Point(346, 205);
+            heightLabel.Name = "heightLabel";
+            heightLabel.Padding = new Padding(0, 0, 0, 10);
+            heightLabel.Size = new Size(46, 25);
+            heightLabel.TabIndex = 10;
+            heightLabel.Text = "Height:";
             // 
             // listBox1
             // 
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(544, 344);
+            listBox1.Location = new Point(6, 46);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(231, 94);
+            listBox1.Size = new Size(309, 184);
             listBox1.TabIndex = 11;
             // 
-            // button1
+            // submitUsername
             // 
-            button1.Location = new Point(700, 89);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 12;
-            button1.Text = "submit";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // dateTimePicker1
-            // 
-            dateTimePicker1.Location = new Point(12, 413);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(200, 23);
-            dateTimePicker1.TabIndex = 13;
-            // 
-            // richTextBox1
-            // 
-            richTextBox1.Location = new Point(263, 126);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(248, 283);
-            richTextBox1.TabIndex = 14;
-            richTextBox1.Text = "";
+            submitUsername.Location = new Point(502, 45);
+            submitUsername.Name = "submitUsername";
+            submitUsername.Size = new Size(75, 23);
+            submitUsername.TabIndex = 12;
+            submitUsername.Text = "Submit";
+            submitUsername.UseVisualStyleBackColor = true;
+            submitUsername.Click += submitUsername_Click;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(544, 316);
+            label10.Location = new Point(6, 3);
             label10.Name = "label10";
-            label10.Size = new Size(85, 15);
+            label10.Padding = new Padding(0, 10, 0, 15);
+            label10.Size = new Size(85, 40);
             label10.TabIndex = 15;
             label10.Text = "Achievements:";
             // 
@@ -194,158 +171,189 @@
             label11.Size = new Size(0, 15);
             label11.TabIndex = 16;
             // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Location = new Point(263, 67);
-            label12.Name = "label12";
-            label12.Size = new Size(115, 15);
-            label12.TabIndex = 17;
-            label12.Text = "Achievement Name:";
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(384, 63);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(100, 23);
-            textBox2.TabIndex = 18;
-            // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(263, 93);
+            label13.Location = new Point(263, 108);
             label13.Name = "label13";
-            label13.Size = new Size(143, 15);
+            label13.Size = new Size(0, 15);
             label13.TabIndex = 19;
-            label13.Text = "Achievement Description:";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(263, 22);
-            label14.Name = "label14";
-            label14.Size = new Size(212, 15);
-            label14.TabIndex = 20;
-            label14.Text = "Add Achievement To Selected Member";
             // 
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(544, 24);
+            label15.Location = new Point(346, 3);
             label15.Name = "label15";
-            label15.Size = new Size(86, 15);
+            label15.Padding = new Padding(0, 10, 0, 15);
+            label15.Size = new Size(86, 40);
             label15.TabIndex = 21;
             label15.Text = "Select Member";
+            label15.Click += label15_Click;
             // 
-            // button2
+            // tabControl1
             // 
-            button2.Location = new Point(263, 415);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 22;
-            button2.Text = "submit";
-            button2.UseVisualStyleBackColor = true;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Location = new Point(197, 0);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(591, 438);
+            tabControl1.TabIndex = 29;
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(label2);
+            tabPage1.Controls.Add(textBox1);
+            tabPage1.Controls.Add(submitAchievement);
+            tabPage1.Controls.Add(richTextBox1);
+            tabPage1.Controls.Add(label15);
+            tabPage1.Controls.Add(listBox1);
+            tabPage1.Controls.Add(desiredWeightLabel);
+            tabPage1.Controls.Add(label10);
+            tabPage1.Controls.Add(usernameTextBox);
+            tabPage1.Controls.Add(nameLabel);
+            tabPage1.Controls.Add(joinDateLabel);
+            tabPage1.Controls.Add(heightLabel);
+            tabPage1.Controls.Add(submitUsername);
+            tabPage1.Controls.Add(curWeightLabel);
+            tabPage1.Controls.Add(sexLabel);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(583, 410);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "tabPage1";
+            tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Click += tabPage1_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(6, 234);
+            label2.Name = "label2";
+            label2.Padding = new Padding(0, 10, 0, 15);
+            label2.Size = new Size(115, 40);
+            label2.TabIndex = 25;
+            label2.Text = "Award achievement:";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(6, 381);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(150, 23);
+            textBox1.TabIndex = 24;
+            textBox1.Text = "Achievement name...";
+            // 
+            // submitAchievement
+            // 
+            submitAchievement.Location = new Point(162, 380);
+            submitAchievement.Name = "submitAchievement";
+            submitAchievement.Size = new Size(75, 23);
+            submitAchievement.TabIndex = 23;
+            submitAchievement.Text = "Award";
+            submitAchievement.UseVisualStyleBackColor = true;
+            submitAchievement.Click += submitAchievement_Click;
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(6, 277);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(571, 98);
+            richTextBox1.TabIndex = 22;
+            richTextBox1.Text = "Achievement description...";
+            richTextBox1.TextChanged += richTextBox1_TextChanged;
+            // 
+            // tabPage2
+            // 
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(583, 410);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "tabPage2";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
             // usernameLabel
             // 
             usernameLabel.AutoSize = true;
             usernameLabel.Location = new Point(12, 24);
             usernameLabel.Name = "usernameLabel";
-            usernameLabel.Size = new Size(77, 15);
+            usernameLabel.Padding = new Padding(0, 0, 0, 15);
+            usernameLabel.Size = new Size(77, 30);
             usernameLabel.TabIndex = 25;
             usernameLabel.Text = "Logged in as:";
             // 
-            // label16
+            // openFileDialog1
             // 
-            label16.AutoSize = true;
-            label16.Location = new Point(12, 384);
-            label16.Name = "label16";
-            label16.Size = new Size(84, 15);
-            label16.TabIndex = 26;
-            label16.Text = "Set Availability";
+            openFileDialog1.FileName = "openFileDialog1";
             // 
-            // listBox2
+            // label3
             // 
-            listBox2.FormattingEnabled = true;
-            listBox2.ItemHeight = 15;
-            listBox2.Location = new Point(12, 126);
-            listBox2.Name = "listBox2";
-            listBox2.Size = new Size(209, 244);
-            listBox2.TabIndex = 27;
+            label3.AutoSize = true;
+            label3.Location = new Point(12, 54);
+            label3.Name = "label3";
+            label3.Padding = new Padding(0, 0, 0, 15);
+            label3.Size = new Size(42, 30);
+            label3.TabIndex = 31;
+            label3.Text = "Name:";
             // 
-            // label18
+            // logout
             // 
-            label18.AutoSize = true;
-            label18.Location = new Point(12, 97);
-            label18.Name = "label18";
-            label18.Size = new Size(54, 15);
-            label18.TabIndex = 28;
-            label18.Text = "Sessions:";
+            logout.Location = new Point(12, 87);
+            logout.Name = "logout";
+            logout.Size = new Size(75, 23);
+            logout.TabIndex = 26;
+            logout.Text = "Logout";
+            logout.UseVisualStyleBackColor = true;
             // 
             // TrainerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label18);
-            Controls.Add(listBox2);
-            Controls.Add(label16);
-            Controls.Add(usernameLabel);
-            Controls.Add(button2);
-            Controls.Add(label15);
-            Controls.Add(label14);
-            Controls.Add(label13);
-            Controls.Add(textBox2);
-            Controls.Add(label12);
-            Controls.Add(label11);
-            Controls.Add(label10);
-            Controls.Add(richTextBox1);
-            Controls.Add(dateTimePicker1);
-            Controls.Add(button1);
-            Controls.Add(listBox1);
-            Controls.Add(label9);
-            Controls.Add(label8);
+            Controls.Add(logout);
             Controls.Add(label3);
-            Controls.Add(label7);
-            Controls.Add(label6);
-            Controls.Add(label5);
+            Controls.Add(tabControl1);
+            Controls.Add(usernameLabel);
+            Controls.Add(label13);
+            Controls.Add(label11);
             Controls.Add(label4);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(MemberIDTextBox);
             Name = "TrainerForm";
             Text = "TrainerForm";
+            Load += TrainerForm_Load;
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private TextBox MemberIDTextBox;
-        private Label label1;
-        private Label label2;
+        private TextBox usernameTextBox;
+        private Label nameLabel;
         private Label label4;
-        private Label label5;
-        private Label label6;
-        private Label label7;
-        private Label label3;
-        private Label label8;
-        private Label label9;
+        private Label curWeightLabel;
+        private Label sexLabel;
+        private Label desiredWeightLabel;
+        private Label joinDateLabel;
+        private Label heightLabel;
         private ListBox listBox1;
-        private Button button1;
-        private DateTimePicker dateTimePicker1;
-        private RichTextBox richTextBox1;
+        private Button submitUsername;
         private Label label10;
         private Label label11;
-        private Label label12;
-        private TextBox textBox2;
         private Label label13;
-        private Label label14;
         private Label label15;
-        private Button button2;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
         private Label usernameLabel;
-        private Label label16;
-        private ListBox listBox2;
-        private Label label18;
+        private Label label2;
+        private TextBox textBox1;
+        private Button submitAchievement;
+        private RichTextBox richTextBox1;
+        private OpenFileDialog openFileDialog1;
+        private Label label3;
+        private Button logout;
     }
 }

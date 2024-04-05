@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FitnessCenter.Classes;
 
 namespace FitnessCenter
 {
@@ -27,6 +28,43 @@ namespace FitnessCenter
         }
 
         private void MemberIDTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void submitUsername_Click(object sender, EventArgs e)
+        {
+            DBConnection conn = new DBConnection();
+            Member mem = await conn.getMember(usernameTextBox.Text);
+            nameLabel.Text = $"Name: {mem.first_name} {mem.last_name}";
+            sexLabel.Text = $"Sex: {mem.sex}";
+            curWeightLabel.Text = $"Current Weight: {mem.current_weight}";
+            desiredWeightLabel.Text = $"Desired Weight: {mem.desired_weight}";
+            joinDateLabel.Text = $"Join Date: {mem.joined_date}";
+            heightLabel.Text = $"Height: {mem.height}";
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label15_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TrainerForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void submitAchievement_Click(object sender, EventArgs e)
         {
 
         }
