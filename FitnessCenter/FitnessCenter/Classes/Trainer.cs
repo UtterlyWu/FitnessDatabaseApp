@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FitnessCenter.Classes
 {
-    internal class Trainer : Account
+    public class Trainer : Account
     {
         public int trainer_id;
 

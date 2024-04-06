@@ -47,7 +47,8 @@ namespace FitnessCenter
             }
             else if (q.account_type == "trainers")
             {
-                TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
+
+                TrainerForm trnform = new TrainerForm(q);
                 trnform.Show();
                 this.Close();
                 return;

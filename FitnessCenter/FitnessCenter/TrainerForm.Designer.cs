@@ -36,7 +36,6 @@
             desiredWeightLabel = new Label();
             joinDateLabel = new Label();
             heightLabel = new Label();
-            listBox1 = new ListBox();
             submitUsername = new Button();
             label10 = new Label();
             label11 = new Label();
@@ -44,14 +43,17 @@
             label15 = new Label();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            viewAchievementButton = new Button();
+            deleteAchivementButton = new Button();
+            achievementDescriptionBox = new TextBox();
             label2 = new Label();
-            textBox1 = new TextBox();
+            achievementNameBox = new TextBox();
             submitAchievement = new Button();
-            richTextBox1 = new RichTextBox();
+            listBox1 = new ListBox();
             tabPage2 = new TabPage();
             usernameLabel = new Label();
             openFileDialog1 = new OpenFileDialog();
-            label3 = new Label();
+            trainerNameLabel = new Label();
             logout = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -61,10 +63,9 @@
             // 
             usernameTextBox.Location = new Point(346, 46);
             usernameTextBox.Name = "usernameTextBox";
+            usernameTextBox.PlaceholderText = "Member username...";
             usernameTextBox.Size = new Size(150, 23);
             usernameTextBox.TabIndex = 0;
-            usernameTextBox.Text = "Member username...";
-            usernameTextBox.TextChanged += MemberIDTextBox_TextChanged;
             // 
             // nameLabel
             // 
@@ -134,15 +135,6 @@
             heightLabel.TabIndex = 10;
             heightLabel.Text = "Height:";
             // 
-            // listBox1
-            // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(6, 46);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(309, 184);
-            listBox1.TabIndex = 11;
-            // 
             // submitUsername
             // 
             submitUsername.Location = new Point(502, 45);
@@ -156,12 +148,13 @@
             // label10
             // 
             label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 9.75F, FontStyle.Underline, GraphicsUnit.Point, 0);
             label10.Location = new Point(6, 3);
             label10.Name = "label10";
             label10.Padding = new Padding(0, 10, 0, 15);
-            label10.Size = new Size(85, 40);
+            label10.Size = new Size(197, 42);
             label10.TabIndex = 15;
-            label10.Text = "Achievements:";
+            label10.Text = "Selected Member Achievements:";
             // 
             // label11
             // 
@@ -182,13 +175,13 @@
             // label15
             // 
             label15.AutoSize = true;
+            label15.Font = new Font("Segoe UI", 9.75F, FontStyle.Underline, GraphicsUnit.Point, 0);
             label15.Location = new Point(346, 3);
             label15.Name = "label15";
             label15.Padding = new Padding(0, 10, 0, 15);
-            label15.Size = new Size(86, 40);
+            label15.Size = new Size(96, 42);
             label15.TabIndex = 21;
             label15.Text = "Select Member";
-            label15.Click += label15_Click;
             // 
             // tabControl1
             // 
@@ -202,10 +195,12 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(viewAchievementButton);
+            tabPage1.Controls.Add(deleteAchivementButton);
+            tabPage1.Controls.Add(achievementDescriptionBox);
             tabPage1.Controls.Add(label2);
-            tabPage1.Controls.Add(textBox1);
+            tabPage1.Controls.Add(achievementNameBox);
             tabPage1.Controls.Add(submitAchievement);
-            tabPage1.Controls.Add(richTextBox1);
             tabPage1.Controls.Add(label15);
             tabPage1.Controls.Add(listBox1);
             tabPage1.Controls.Add(desiredWeightLabel);
@@ -222,27 +217,58 @@
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(583, 410);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "tabPage1";
+            tabPage1.Text = "Achievements";
             tabPage1.UseVisualStyleBackColor = true;
-            tabPage1.Click += tabPage1_Click;
+            // 
+            // viewAchievementButton
+            // 
+            viewAchievementButton.Location = new Point(6, 208);
+            viewAchievementButton.Name = "viewAchievementButton";
+            viewAchievementButton.Size = new Size(150, 23);
+            viewAchievementButton.TabIndex = 28;
+            viewAchievementButton.Text = "View Achievement";
+            viewAchievementButton.UseVisualStyleBackColor = true;
+            viewAchievementButton.Click += viewAchievementButton_Click;
+            // 
+            // deleteAchivementButton
+            // 
+            deleteAchivementButton.Location = new Point(162, 206);
+            deleteAchivementButton.Name = "deleteAchivementButton";
+            deleteAchivementButton.Size = new Size(150, 23);
+            deleteAchivementButton.TabIndex = 27;
+            deleteAchivementButton.Text = "Delete Achievement";
+            deleteAchivementButton.UseVisualStyleBackColor = true;
+            deleteAchivementButton.Click += deleteAchivementButton_Click;
+            // 
+            // achievementDescriptionBox
+            // 
+            achievementDescriptionBox.Location = new Point(6, 277);
+            achievementDescriptionBox.Multiline = true;
+            achievementDescriptionBox.Name = "achievementDescriptionBox";
+            achievementDescriptionBox.PlaceholderText = "Achievement description...";
+            achievementDescriptionBox.Size = new Size(571, 98);
+            achievementDescriptionBox.TabIndex = 26;
             // 
             // label2
             // 
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Underline, GraphicsUnit.Point, 0);
+            label2.ForeColor = SystemColors.ControlText;
             label2.Location = new Point(6, 234);
             label2.Name = "label2";
             label2.Padding = new Padding(0, 10, 0, 15);
-            label2.Size = new Size(115, 40);
+            label2.Size = new Size(248, 42);
             label2.TabIndex = 25;
-            label2.Text = "Award achievement:";
+            label2.Text = "Award Achievement to Selected Member:";
             // 
-            // textBox1
+            // achievementNameBox
             // 
-            textBox1.Location = new Point(6, 381);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(150, 23);
-            textBox1.TabIndex = 24;
-            textBox1.Text = "Achievement name...";
+            achievementNameBox.Location = new Point(6, 381);
+            achievementNameBox.Name = "achievementNameBox";
+            achievementNameBox.PlaceholderText = "Achievement name...";
+            achievementNameBox.Size = new Size(150, 23);
+            achievementNameBox.TabIndex = 24;
             // 
             // submitAchievement
             // 
@@ -254,14 +280,15 @@
             submitAchievement.UseVisualStyleBackColor = true;
             submitAchievement.Click += submitAchievement_Click;
             // 
-            // richTextBox1
+            // listBox1
             // 
-            richTextBox1.Location = new Point(6, 277);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(571, 98);
-            richTextBox1.TabIndex = 22;
-            richTextBox1.Text = "Achievement description...";
-            richTextBox1.TextChanged += richTextBox1_TextChanged;
+            listBox1.FormattingEnabled = true;
+            listBox1.ItemHeight = 15;
+            listBox1.Location = new Point(6, 46);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(306, 154);
+            listBox1.TabIndex = 11;
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
             // 
             // tabPage2
             // 
@@ -287,15 +314,15 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // label3
+            // trainerNameLabel
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 54);
-            label3.Name = "label3";
-            label3.Padding = new Padding(0, 0, 0, 15);
-            label3.Size = new Size(42, 30);
-            label3.TabIndex = 31;
-            label3.Text = "Name:";
+            trainerNameLabel.AutoSize = true;
+            trainerNameLabel.Location = new Point(12, 54);
+            trainerNameLabel.Name = "trainerNameLabel";
+            trainerNameLabel.Padding = new Padding(0, 0, 0, 15);
+            trainerNameLabel.Size = new Size(42, 30);
+            trainerNameLabel.TabIndex = 31;
+            trainerNameLabel.Text = "Name:";
             // 
             // logout
             // 
@@ -305,6 +332,7 @@
             logout.TabIndex = 26;
             logout.Text = "Logout";
             logout.UseVisualStyleBackColor = true;
+            logout.Click += logout_Click;
             // 
             // TrainerForm
             // 
@@ -312,7 +340,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(logout);
-            Controls.Add(label3);
+            Controls.Add(trainerNameLabel);
             Controls.Add(tabControl1);
             Controls.Add(usernameLabel);
             Controls.Add(label13);
@@ -320,7 +348,6 @@
             Controls.Add(label4);
             Name = "TrainerForm";
             Text = "TrainerForm";
-            Load += TrainerForm_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -338,7 +365,6 @@
         private Label desiredWeightLabel;
         private Label joinDateLabel;
         private Label heightLabel;
-        private ListBox listBox1;
         private Button submitUsername;
         private Label label10;
         private Label label11;
@@ -349,11 +375,14 @@
         private TabPage tabPage2;
         private Label usernameLabel;
         private Label label2;
-        private TextBox textBox1;
+        private TextBox achievementNameBox;
         private Button submitAchievement;
-        private RichTextBox richTextBox1;
         private OpenFileDialog openFileDialog1;
-        private Label label3;
+        private Label trainerNameLabel;
         private Button logout;
+        private TextBox achievementDescriptionBox;
+        private Button viewAchievementButton;
+        private Button deleteAchivementButton;
+        private ListBox listBox1;
     }
 }

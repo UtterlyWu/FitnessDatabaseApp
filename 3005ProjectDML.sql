@@ -127,6 +127,19 @@ CREATE TABLE public.Availability(
 	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id)
 );
 
+CREATE TABLE public.Achievements(
+	achievement_id SERIAL;
+	name VARCHAR(80) NOT NULL;
+	description TEXT;
+	member_id INT NOT NULL;
+	date DATE NOT NULL;
+	trainer_id INT NOT NULL;
+	
+	PRIMARY KEY(achievement_id),
+	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id),
+	FOREIGN KEY(member_id) REFERENCES Members(member_id)
+);
+
 CREATE OR REPLACE FUNCTION insert_into_accounts()
 RETURNS TRIGGER AS 
 $$
