@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitnessCenter.Classes
 {
-    internal class Account
+    public class Account
     {
         public String username;
         public String password;

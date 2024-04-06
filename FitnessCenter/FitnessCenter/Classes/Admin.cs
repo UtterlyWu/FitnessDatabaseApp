@@ -7,7 +7,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace FitnessCenter.Classes
 {
-    internal class Admin : Account
+    public class Admin : Account
     {
         public int admin_id;
         public String position;

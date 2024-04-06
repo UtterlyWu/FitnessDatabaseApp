@@ -188,6 +188,7 @@
             Register.TabIndex = 14;
             Register.Text = "Register";
             Register.UseVisualStyleBackColor = true;
+            Register.Click += Register_Click;
             // 
             // username
             // 

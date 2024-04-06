@@ -132,7 +132,7 @@ RETURNS TRIGGER AS
 $$
 BEGIN
 	IF (TG_TABLE_NAME = 'members' OR TG_TABLE_NAME = 'trainers' OR TG_TABLE_NAME = 'adminstaff') THEN
-		-- RAISE NOTICE '%', TG_TABLE_NAME;
+		RAISE NOTICE '%', TG_TABLE_NAME;
 		INSERT INTO Accounts(username, pword, first_name, last_name, account_type)
 		VALUES (NEW.username, NEW.pword, NEW.first_name, NEW.last_name, TG_TABLE_NAME);
     END IF;
