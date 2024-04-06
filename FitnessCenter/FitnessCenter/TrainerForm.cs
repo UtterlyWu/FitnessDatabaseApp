@@ -53,9 +53,7 @@ namespace FitnessCenter
             }
 
             //Display user achievements
-            List<Achievement> achievements = await conn.getAchievements(usernameTextBox.Text);
-
-
+            List<Achievement> achievements = await conn.getAchievements(selected.member_id);
         }
 
         private void logout_Click(object sender, EventArgs e)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitnessCenter.Classes
 {
-    internal class Member : Account
+    public class Member : Account
     {
         public String joined_date;
         public String sex;

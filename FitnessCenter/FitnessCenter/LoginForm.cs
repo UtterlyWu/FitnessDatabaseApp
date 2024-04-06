@@ -47,10 +47,10 @@ namespace FitnessCenter
             }
             else if (q.account_type == "trainers")
             {
-
-                TrainerForm trnform = new TrainerForm(q);
-                trnform.Show();
-                this.Close();
+                //take care of this later patrick
+                //TrainerForm trnform = new TrainerForm();
+                //trnform.Show();
+                //this.Close();
                 return;
             }
             else if (q.account_type == "adminstaff")

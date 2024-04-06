@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FitnessCenter.Classes;
 using System.Diagnostics;
+using System.Data;
 
 namespace FitnessCenter
 {
@@ -75,6 +76,7 @@ namespace FitnessCenter
 
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
+
                 cmd.CommandText = $"SELECT * FROM public.Accounts WHERE username='{username}' AND pword = '{password}' AND account_type = '{account_type}'";
 
                 Account result;
@@ -140,15 +142,46 @@ namespace FitnessCenter
 
         }
 
-        public async Task<List<Achievement>> getAchievements(string username)
+        public async Task<Trainer> getTrainer(string username)
+
         {
             try
             {
                 await conn.OpenAsync();
-
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT * FROM public.Achievements WHERE member";
+                cmd.CommandText = $"SELECT * FROM public.trainers WHERE username='{username}'";
+
+                Trainer result;
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                result = new Trainer(
+                        Username: reader.GetString(reader.GetOrdinal("username")),
+                        Password: reader.GetString(reader.GetOrdinal("pword")),
+                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                        Trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id")));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<List<Achievement>> getAchievements(int member_id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT * FROM public.Achievements WHERE member_id = {member_id}"; //may not work
 
                 var result = new List<Achievement>();
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -167,7 +200,39 @@ namespace FitnessCenter
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error fetching data: " + ex.Message);
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<Admin> getAdmin(string username)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT * FROM public.adminstaff WHERE username='{username}'";
+
+                Admin result;
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                result = new Admin(
+                        Username: reader.GetString(reader.GetOrdinal("username")),
+                        Password: reader.GetString(reader.GetOrdinal("pword")),
+                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                        Admin_id: reader.GetInt32(reader.GetOrdinal("admin_id")),
+                        Position: reader.GetString(reader.GetOrdinal("position")));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
                 return null;
             }
             finally
@@ -196,6 +261,41 @@ namespace FitnessCenter
             finally
             {
                 conn.Close();
+            }
+        }
+
+        public async void register(string username, string password, string first_name, string last_name, string type)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                if (type == "members")
+                {
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}','2024-04-06');";
+                }
+                else if (type == "trainers" || type == "admins")
+                {
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}');";
+                }
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error creating data: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                if (conn != null && conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
+
             }
         }
     }
