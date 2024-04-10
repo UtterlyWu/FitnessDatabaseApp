@@ -15,7 +15,7 @@ INSERT INTO public.trainers(username,pword,first_name,last_name)
 VALUES
 	('trainer1','password','Al','Gore'),
 	('trainer2','password','John','Kerry'),
-	('trainer2','password','Barack','Obama');
+	('trainer3','password','Barack','Obama');
 
 INSERT INTO public.rooms(room_number, name)
 VALUES
