@@ -15,6 +15,10 @@ namespace FitnessCenter.Classes
         public float desired_weight;
         public float height;
 
+        public Member(String Username, String Password, String First_name, String Last_name) : base(Username, Password, First_name, Last_name, "members")
+        {
+        }
+
         public Member(String Username, String Password, String First_name, String Last_name, String Joined_date, String Sex, int Member_id, float Current_weight, float Desired_weight, float Height)
         : base(Username, Password, First_name, Last_name, "members")
         {
@@ -25,5 +29,6 @@ namespace FitnessCenter.Classes
             desired_weight = Desired_weight;
             height = Height;
         }
+
     }
 }

@@ -22,46 +22,54 @@ namespace FitnessCenter
             DBConnection conn = new DBConnection();
 
             String account_type = "";
+
             if (Option_Member.Checked)
             {
                 account_type = "members";
+                Member q = await conn.getMember(usernameTB.Text);
+                if (q == null)
+                {
+                    ErrorText.Text = "Unable to login, try again.";
+                    return;
+                }
+                if (q.password != passwordTB.Text)
+                {
+                    ErrorText.Text = "Incorrect Password, try again.";
+                    return;
+                }
+                MemberForm memform = new MemberForm(q);
+                memform.Show();
+                this.Close();
+                return;
             }
             else if (Option_Trainer.Checked) {
                 account_type = "trainers";
-            }
-            else if (Option_Admin.Checked)
-            {
-                account_type = "adminstaff";
-            }
-            Account q= await conn.LoginAccount(usernameTB.Text, passwordTB.Text, account_type);
-
-            if (q == null)
-            {
-                ErrorText.Text = "Unable to login, try again.";
-                return;
-            }
-            else if (q.account_type == "members")
-            {
-                //open member form
-                return;
-            }
-            else if (q.account_type == "trainers")
-            {
+                Trainer q = await conn.getTrainer(usernameTB.Text);
+                if (q == null)
+                {
+                    ErrorText.Text = "Unable to login, try again.";
+                    return;
+                }
+                if (q.password != passwordTB.Text)
+                {
+                    ErrorText.Text = "Incorrect Password, try again.";
+                    return;
+                }
                 TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
                 trnform.Show();
                 this.Close();
                 return;
             }
-            else if (q.account_type == "adminstaff")
+            else if (Option_Admin.Checked)
             {
-                //open admin form
-                return;
+                account_type = "adminstaff";
+                Admin q = await conn.getAdmin(usernameTB.Text);
             }
-            else
-            {
-                ErrorText.Text = "Unable to login, try again.";
-                return;
+            else {
+                ErrorText.Text = "No option selected. Try again. Idiot.";
+                return; 
             }
+
         }
 
         private void Option_Member_CheckedChanged(object sender, EventArgs e)

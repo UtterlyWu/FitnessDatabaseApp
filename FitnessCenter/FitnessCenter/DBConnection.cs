@@ -245,7 +245,7 @@ namespace FitnessCenter
             }
         }
 
-        public async void register(string username, string password, string first_name, string last_name, string type)
+        public async Task<bool> register(string username, string password, string first_name, string last_name, string type)
         {
             try
             {
@@ -264,17 +264,20 @@ namespace FitnessCenter
 
                 using var reader = await cmd.ExecuteReaderAsync();
                 await reader.ReadAsync();
+                return true;
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error creating data: " + ex.Message);
-                return;
+                return false;
             }
             finally
             {
                 if (conn != null && conn.State != ConnectionState.Closed)
                 {
                     conn.Close();
+                    
                 }
             }
         }

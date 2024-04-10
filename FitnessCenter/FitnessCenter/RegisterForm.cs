@@ -67,7 +67,12 @@ namespace FitnessCenter
                     ErrorText.Text = "username: " + username.Text + " taken";
                     return;
                 }
-                conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "members");
+                await conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "members");
+                Member q = await conn.getMember(username.Text);
+                MemberForm memform = new MemberForm(new Member(q.username, q.password, q.first_name, q.last_name));
+                memform.Show();
+                this.Close();
+                return;
             }
             if (option_trainer.Checked)
             {
@@ -78,6 +83,11 @@ namespace FitnessCenter
                     return;
                 }
                 conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "trainers");
+                Trainer q = await conn.getTrainer(username.Text);
+                TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
+                trnform.Show();
+                this.Close();
+                return;
             }
             if (option_admin.Checked)
             {
@@ -88,6 +98,7 @@ namespace FitnessCenter
                     return;
                 }
                 conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "adminstaff");
+                Admin a = await conn.getAdmin(username.Text);
             }
         }
     }
