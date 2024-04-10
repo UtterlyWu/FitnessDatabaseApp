@@ -229,7 +229,7 @@ namespace FitnessCenter
         }
 
 
-        public async void register(string username, string password, string first_name, string last_name, string type)
+        public async Task<bool> register(string username, string password, string first_name, string last_name, string type)
         {
             try
             {

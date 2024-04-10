@@ -55,7 +55,7 @@ namespace FitnessCenter
                     ErrorText.Text = "Incorrect Password, try again.";
                     return;
                 }
-                TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
+                TrainerForm trnform = new TrainerForm(q);
                 trnform.Show();
                 this.Close();
             }

@@ -84,7 +84,7 @@ namespace FitnessCenter
                 }
                 conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "trainers");
                 Trainer q = await conn.getTrainer(username.Text);
-                TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
+                TrainerForm trnform = new TrainerForm(q);
                 trnform.Show();
                 this.Close();
                 return;
