@@ -68,42 +68,6 @@ namespace FitnessCenter
             }
         }
 
-        public async Task<Account> LoginAccount(string username, string password, String account_type)
-        {
-            try
-            {
-                await conn.OpenAsync();
-
-                using var cmd = new NpgsqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"SELECT * FROM public.Accounts WHERE username='{username}' AND pword = '{password}' AND account_type = '{account_type}'";
-
-                Account result;
-                using var reader = await cmd.ExecuteReaderAsync();
-                await reader.ReadAsync();
-                result = new Account(
-                Username: reader.GetString(reader.GetOrdinal("username")),
-                Password: reader.GetString(reader.GetOrdinal("pword")),
-                First_name: reader.GetString(reader.GetOrdinal("first_name")),
-                Last_name: reader.GetString(reader.GetOrdinal("last_name")),
-                Account_type: reader.GetString(reader.GetOrdinal("account_type")));
-                return result;
-            }
-
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error fetching data: " + ex.Message);
-                return null;
-            }
-
-            finally
-            {
-                conn.Close();
-            }
-
-        }
-
         public async Task<Member> getMember(string username)
         {
             try
