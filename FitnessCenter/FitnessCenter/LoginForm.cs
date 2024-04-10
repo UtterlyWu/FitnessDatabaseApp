@@ -58,7 +58,6 @@ namespace FitnessCenter
                 TrainerForm trnform = new TrainerForm(q.username, q.first_name, q.last_name);
                 trnform.Show();
                 this.Close();
-                return;
             }
             else if (Option_Admin.Checked)
             {

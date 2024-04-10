@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitnessCenter.Classes
 {
-    internal class Billing
+    public class Billing
     {
         public float amount;
         public int card_number;
