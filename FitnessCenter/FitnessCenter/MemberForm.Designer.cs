@@ -37,10 +37,12 @@
             monthCalendar1 = new MonthCalendar();
             Sessions = new ListBox();
             tabPage2 = new TabPage();
+            RoutineDesc = new RichTextBox();
+            ErrorTextSS = new Label();
             setRoutine = new Button();
             label7 = new Label();
-            listBox1 = new ListBox();
-            button2 = new Button();
+            Routines = new ListBox();
+            SetAttributes = new Button();
             curSex = new Label();
             curDesWeight = new Label();
             curWeight = new Label();
@@ -61,6 +63,7 @@
             label1 = new Label();
             username = new Label();
             name = new Label();
+            richTextBox1 = new RichTextBox();
             tabControl1.SuspendLayout();
             Register.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -75,6 +78,7 @@
             logout.TabIndex = 33;
             logout.Text = "Logout";
             logout.UseVisualStyleBackColor = true;
+            logout.Click += logout_Click;
             // 
             // usernameLabel
             // 
@@ -98,6 +102,7 @@
             // 
             // Register
             // 
+            Register.Controls.Add(richTextBox1);
             Register.Controls.Add(errorText);
             Register.Controls.Add(button1);
             Register.Controls.Add(monthCalendar1);
@@ -140,15 +145,17 @@
             Sessions.FormattingEnabled = true;
             Sessions.Location = new Point(20, 16);
             Sessions.Name = "Sessions";
-            Sessions.Size = new Size(201, 384);
+            Sessions.Size = new Size(201, 204);
             Sessions.TabIndex = 0;
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(RoutineDesc);
+            tabPage2.Controls.Add(ErrorTextSS);
             tabPage2.Controls.Add(setRoutine);
             tabPage2.Controls.Add(label7);
-            tabPage2.Controls.Add(listBox1);
-            tabPage2.Controls.Add(button2);
+            tabPage2.Controls.Add(Routines);
+            tabPage2.Controls.Add(SetAttributes);
             tabPage2.Controls.Add(curSex);
             tabPage2.Controls.Add(curDesWeight);
             tabPage2.Controls.Add(curWeight);
@@ -175,6 +182,24 @@
             tabPage2.Text = "Set My Stats";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // RoutineDesc
+            // 
+            RoutineDesc.Location = new Point(319, 208);
+            RoutineDesc.Name = "RoutineDesc";
+            RoutineDesc.ReadOnly = true;
+            RoutineDesc.Size = new Size(220, 120);
+            RoutineDesc.TabIndex = 23;
+            RoutineDesc.Text = "";
+            // 
+            // ErrorTextSS
+            // 
+            ErrorTextSS.AutoSize = true;
+            ErrorTextSS.ForeColor = Color.Red;
+            ErrorTextSS.Location = new Point(412, 389);
+            ErrorTextSS.Name = "ErrorTextSS";
+            ErrorTextSS.Size = new Size(0, 20);
+            ErrorTextSS.TabIndex = 22;
+            // 
             // setRoutine
             // 
             setRoutine.Location = new Point(373, 338);
@@ -183,6 +208,7 @@
             setRoutine.TabIndex = 21;
             setRoutine.Text = "Set Routine";
             setRoutine.UseVisualStyleBackColor = true;
+            setRoutine.Click += setRoutine_Click;
             // 
             // label7
             // 
@@ -193,22 +219,24 @@
             label7.TabIndex = 20;
             label7.Text = "Select a new routine:";
             // 
-            // listBox1
+            // Routines
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(358, 44);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(171, 284);
-            listBox1.TabIndex = 19;
+            Routines.FormattingEnabled = true;
+            Routines.Location = new Point(319, 44);
+            Routines.Name = "Routines";
+            Routines.Size = new Size(220, 144);
+            Routines.TabIndex = 19;
+            Routines.SelectedIndexChanged += Routines_SelectedIndexChanged;
             // 
-            // button2
+            // SetAttributes
             // 
-            button2.Location = new Point(181, 271);
-            button2.Name = "button2";
-            button2.Size = new Size(94, 71);
-            button2.TabIndex = 18;
-            button2.Text = "SET";
-            button2.UseVisualStyleBackColor = true;
+            SetAttributes.Location = new Point(181, 271);
+            SetAttributes.Name = "SetAttributes";
+            SetAttributes.Size = new Size(94, 71);
+            SetAttributes.TabIndex = 18;
+            SetAttributes.Text = "SET";
+            SetAttributes.UseVisualStyleBackColor = true;
+            SetAttributes.Click += setAttribues_click;
             // 
             // curSex
             // 
@@ -387,6 +415,15 @@
             name.TabIndex = 37;
             name.Text = "label2";
             // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(20, 242);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.ReadOnly = true;
+            richTextBox1.Size = new Size(201, 158);
+            richTextBox1.TabIndex = 4;
+            richTextBox1.Text = "";
+            // 
             // MemberForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -448,8 +485,12 @@
         private TextBox setHeight;
         private TextBox setLS;
         private TextBox setFN;
-        private ListBox listBox1;
+        private ListBox Routines;
         private Button setRoutine;
         private Label label7;
+        private Button SetAttributes;
+        private Label ErrorTextSS;
+        private RichTextBox RoutineDesc;
+        private RichTextBox richTextBox1;
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FitnessCenter.Classes;
 using System.Diagnostics;
 using System.Data;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace FitnessCenter
 {
@@ -52,7 +53,8 @@ namespace FitnessCenter
                         Member_id: reader.GetInt32(reader.GetOrdinal("member_id")),
                         Current_weight: reader.GetInt32(reader.GetOrdinal("current_weight")),
                         Desired_weight: reader.GetInt32(reader.GetOrdinal("desired_weight")),
-                        Height: reader.GetInt32(reader.GetOrdinal("height"))
+                        Height: reader.GetInt32(reader.GetOrdinal("height")),
+                        Routine_id: reader.GetInt32(reader.GetOrdinal("routine_id"))
                     ));
                 }
                 return result;
@@ -73,7 +75,6 @@ namespace FitnessCenter
             try
             {
                 await conn.OpenAsync();
-
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
                 cmd.CommandText = $"SELECT * FROM public.Members WHERE username='{username}'";
@@ -82,16 +83,18 @@ namespace FitnessCenter
                 using var reader = await cmd.ExecuteReaderAsync();
                 await reader.ReadAsync();
                 result = new Member(
-                        Username: reader.GetString(reader.GetOrdinal("username")),
-                        Password: reader.GetString(reader.GetOrdinal("pword")),
-                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
-                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
-                        Joined_date: reader.GetDateTime(reader.GetOrdinal("joined_date")).ToString("yyyy-MM-dd"),
-                        Sex: reader.GetString(reader.GetOrdinal("sex")),
-                        Member_id: reader.GetInt32(reader.GetOrdinal("member_id")),
-                        Current_weight: reader.GetFloat(reader.GetOrdinal("current_weight")),
-                        Desired_weight: reader.GetFloat(reader.GetOrdinal("desired_weight")),
-                        Height: reader.GetFloat(reader.GetOrdinal("height")));
+                    Username: reader.GetString(reader.GetOrdinal("username")),
+                    Password: reader.GetString(reader.GetOrdinal("pword")),
+                    First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                    Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                    Joined_date: reader.GetDateTime(reader.GetOrdinal("joined_date")).ToString("yyyy-MM-dd"),
+                    Sex: reader.IsDBNull(reader.GetOrdinal("sex")) ? null : reader.GetString(reader.GetOrdinal("sex")),
+                    Member_id: reader.GetInt32(reader.GetOrdinal("member_id")),
+                    Current_weight: reader.IsDBNull(reader.GetOrdinal("current_weight")) ? -1 : reader.GetFloat(reader.GetOrdinal("current_weight")),
+                    Desired_weight: reader.IsDBNull(reader.GetOrdinal("desired_weight")) ? -1 : reader.GetFloat(reader.GetOrdinal("desired_weight")),
+                    Height: reader.IsDBNull(reader.GetOrdinal("height")) ? -1 : reader.GetFloat(reader.GetOrdinal("height")),
+                    Routine_id: reader.IsDBNull(reader.GetOrdinal("routine_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("routine_id"))
+                    );
                 return result;
             }
             catch (Exception ex)
@@ -107,7 +110,6 @@ namespace FitnessCenter
         }
 
         public async Task<Trainer> getTrainer(string username)
-
         {
             try
             {
@@ -228,6 +230,93 @@ namespace FitnessCenter
             }
         }
 
+        public async Task<bool> updateAttributeStr(String attribute, String newThing, String type, String account)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"UPDATE public.{type}\r\nSET {attribute} = '{newThing}'\r\nWHERE username = '{account}'";
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error creating data: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (conn != null && conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Routine>> GetRoutines()
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT * FROM public.fitnessroutines";
+                var result = new List<Routine>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Routine(
+                        routine_id: reader.GetInt32(reader.GetOrdinal("routine_id")),
+                        title: reader.GetString(reader.GetOrdinal("title")),
+                        description: reader.GetString(reader.GetOrdinal("description")),
+                        catagory: reader.GetString(reader.GetOrdinal("category"))));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<bool> updateAttributeInt(String attribute, int newThing, String account)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"UPDATE public.members\r\nSET {attribute} = '{newThing}'\r\nWHERE username = '{account}'";
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error creating data: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (conn != null && conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+
+                }
+            }
+        }
 
         public async Task<bool> register(string username, string password, string first_name, string last_name, string type)
         {
@@ -237,13 +326,14 @@ namespace FitnessCenter
 
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
+                string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
                 if (type == "members")
                 {
-                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}','2024-04-06');";
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}','{currentDate}');";
                 }
                 else if (type == "trainers" || type == "admins")
                 {
-                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}');";
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}',{currentDate});";
                 }
 
                 using var reader = await cmd.ExecuteReaderAsync();
