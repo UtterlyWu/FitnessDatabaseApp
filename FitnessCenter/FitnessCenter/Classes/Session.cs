@@ -29,5 +29,10 @@ namespace FitnessCenter.Classes
             this.date = date;
             this.capacity = capacity;
         }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }
