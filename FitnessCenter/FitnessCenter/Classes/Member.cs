@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FitnessCenter.Classes
 {
@@ -32,5 +33,9 @@ namespace FitnessCenter.Classes
             routine_id = Routine_id;
         }
 
+        public override string ToString()
+        {
+            return $"{first_name} {last_name}";
+        }
     }
 }

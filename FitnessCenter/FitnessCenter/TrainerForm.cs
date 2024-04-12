@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,20 @@ namespace FitnessCenter
             }
         }
 
+        async void refresh_sessions()
+        {
+
+            sessionListBox.Items.Clear();
+            List<Session> sessions = await conn.getSessions(new List<string> { "trainer_id" }, new List<string> { user.trainer_id.ToString() });
+            if (sessions != null)
+            {
+                for (int i = 0; i < sessions.Count; i++)
+                {
+                    sessionListBox.Items.Add(sessions[i]);
+                }
+            }
+        }
+
         private async void submitUsername_Click(object sender, EventArgs e)
         {
             selected_mem = await conn.getMember(usernameTextBox.Text);
@@ -85,16 +100,11 @@ namespace FitnessCenter
             {
                 cur_viewed_achievement.Close();
             }
-         }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void deleteAchivementButton_Click(object sender, EventArgs e)
         {
-            Achievement selected_achievement = (Achievement) achievementListBox.SelectedItem;
+            Achievement selected_achievement = (Achievement)achievementListBox.SelectedItem;
             if (selected_achievement != null)
             {
                 List<string> argument = new List<string>() { "achievement_id" };
@@ -137,6 +147,68 @@ namespace FitnessCenter
                 achievementNameBox.Text = "";
                 achievementDescriptionBox.Text = "";
             }
+        }
+
+        private void addTimeButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteTimeButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void refreshSelectedSession()
+        {
+            Session selected_session = (Session)sessionListBox.SelectedItem;
+            if (selected_session != null) 
+            {
+                sesNameLabel.Text = $"Session Name: {selected_session.name}";
+                sesLocationLabel.Text = $"Room Number: {selected_session.room_number}";
+                sesTypeLabel.Text = $"Session Type: {selected_session.type}";
+                sesDescriptionTxt.Text = $"Session Description: {selected_session.description}";
+                sesDateLabel.Text = $"Session Date: {selected_session.date}";
+
+                attendingUserList.Items.Clear();
+                List<Member> attendees = await conn.getMembers(query: $"SELECT Members.* FROM Members NATURAL JOIN Registrations WHERE Registrations.session_id = {selected_session.session_id};");
+                for (int i = 0; i < attendees.Count; i++)
+                {
+                    attendingUserList.Items.Add(attendees[i]);
+                }
+
+                sesCapacityLabel.Text = $"Attending Members ({attendees.Count}/{selected_session.capacity}):";
+            }
+            else
+            {
+                sesNameLabel.Text = $"Session Name:";
+                sesLocationLabel.Text = $"Room Number:";
+                sesTypeLabel.Text = $"Session Type:";
+                sesDescriptionTxt.Text = $"Session Description:";
+                sesDateLabel.Text = $"Session Date:";
+                sesCapacityLabel.Text = $"Attending Members:";
+                attendingUserList.Items.Clear();
+            }
+        }
+
+        private async void sessionListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshSelectedSession();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                refresh_sessions();
+            }
+        }
+
+        private void refreshSessions_Click(object sender, EventArgs e)
+        {
+            refresh_sessions();
+            refreshSelectedSession();
+
         }
     }
 }

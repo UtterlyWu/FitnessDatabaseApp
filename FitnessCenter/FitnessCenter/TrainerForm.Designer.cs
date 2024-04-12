@@ -50,21 +50,31 @@
             achievementNameBox = new TextBox();
             submitAchievement = new Button();
             achievementListBox = new ListBox();
-            tabPage2 = new TabPage();
+            sessionPage = new TabPage();
+            refreshSessions = new Button();
+            sessionListBox = new ListBox();
+            label14 = new Label();
+            sesCapacityLabel = new Label();
+            attendingUserList = new ListBox();
+            label9 = new Label();
+            sesLocationLabel = new Label();
+            sesDateLabel = new Label();
+            sesTypeLabel = new Label();
+            sesNameLabel = new Label();
+            sesDescriptionTxt = new TextBox();
             usernameLabel = new Label();
             openFileDialog1 = new OpenFileDialog();
             trainerNameLabel = new Label();
             logout = new Button();
             label1 = new Label();
-            listBox1 = new ListBox();
-            listBox2 = new ListBox();
+            availabilityListBox = new ListBox();
             addTimeButton = new Button();
             dateTimePicker1 = new DateTimePicker();
-            button2 = new Button();
+            deleteTimeButton = new Button();
             label3 = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
-            tabPage2.SuspendLayout();
+            sessionPage.SuspendLayout();
             SuspendLayout();
             // 
             // usernameTextBox
@@ -194,12 +204,13 @@
             // tabControl1
             // 
             tabControl1.Controls.Add(tabPage1);
-            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(sessionPage);
             tabControl1.Location = new Point(197, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(591, 438);
             tabControl1.TabIndex = 29;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // tabPage1
             // 
@@ -296,18 +307,135 @@
             achievementListBox.Name = "achievementListBox";
             achievementListBox.Size = new Size(306, 154);
             achievementListBox.TabIndex = 11;
-            achievementListBox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
             // 
-            // tabPage2
+            // sessionPage
             // 
-            tabPage2.Controls.Add(listBox2);
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(583, 410);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "Availability";
-            tabPage2.UseVisualStyleBackColor = true;
+            sessionPage.Controls.Add(refreshSessions);
+            sessionPage.Controls.Add(sessionListBox);
+            sessionPage.Controls.Add(label14);
+            sessionPage.Controls.Add(sesCapacityLabel);
+            sessionPage.Controls.Add(attendingUserList);
+            sessionPage.Controls.Add(label9);
+            sessionPage.Controls.Add(sesLocationLabel);
+            sessionPage.Controls.Add(sesDateLabel);
+            sessionPage.Controls.Add(sesTypeLabel);
+            sessionPage.Controls.Add(sesNameLabel);
+            sessionPage.Controls.Add(sesDescriptionTxt);
+            sessionPage.Location = new Point(4, 24);
+            sessionPage.Name = "sessionPage";
+            sessionPage.Padding = new Padding(3);
+            sessionPage.Size = new Size(583, 410);
+            sessionPage.TabIndex = 1;
+            sessionPage.Text = "Availability";
+            sessionPage.UseVisualStyleBackColor = true;
+            // 
+            // refreshSessions
+            // 
+            refreshSessions.Location = new Point(502, 205);
+            refreshSessions.Name = "refreshSessions";
+            refreshSessions.Size = new Size(75, 23);
+            refreshSessions.TabIndex = 13;
+            refreshSessions.Text = "Refresh";
+            refreshSessions.UseVisualStyleBackColor = true;
+            refreshSessions.Click += refreshSessions_Click;
+            // 
+            // sessionListBox
+            // 
+            sessionListBox.FormattingEnabled = true;
+            sessionListBox.ItemHeight = 15;
+            sessionListBox.Location = new Point(218, 205);
+            sessionListBox.Name = "sessionListBox";
+            sessionListBox.Size = new Size(278, 199);
+            sessionListBox.TabIndex = 12;
+            sessionListBox.SelectedIndexChanged += sessionListBox_SelectedIndexChanged;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(218, 162);
+            label14.Name = "label14";
+            label14.Padding = new Padding(0, 10, 0, 15);
+            label14.Size = new Size(134, 40);
+            label14.TabIndex = 11;
+            label14.Text = "Select a Session to View:";
+            // 
+            // sesCapacityLabel
+            // 
+            sesCapacityLabel.AutoSize = true;
+            sesCapacityLabel.Location = new Point(6, 163);
+            sesCapacityLabel.Name = "sesCapacityLabel";
+            sesCapacityLabel.Padding = new Padding(0, 10, 0, 15);
+            sesCapacityLabel.Size = new Size(116, 40);
+            sesCapacityLabel.TabIndex = 10;
+            sesCapacityLabel.Text = "Attending Members:";
+            // 
+            // attendingUserList
+            // 
+            attendingUserList.FormattingEnabled = true;
+            attendingUserList.ItemHeight = 15;
+            attendingUserList.Location = new Point(6, 205);
+            attendingUserList.Name = "attendingUserList";
+            attendingUserList.Size = new Size(206, 199);
+            attendingUserList.TabIndex = 8;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(218, 3);
+            label9.Name = "label9";
+            label9.Padding = new Padding(0, 10, 0, 15);
+            label9.Size = new Size(112, 40);
+            label9.TabIndex = 7;
+            label9.Text = "Session Description:";
+            // 
+            // sesLocationLabel
+            // 
+            sesLocationLabel.AutoSize = true;
+            sesLocationLabel.Location = new Point(6, 123);
+            sesLocationLabel.Name = "sesLocationLabel";
+            sesLocationLabel.Padding = new Padding(0, 10, 0, 15);
+            sesLocationLabel.Size = new Size(89, 40);
+            sesLocationLabel.TabIndex = 6;
+            sesLocationLabel.Text = "Room Number:";
+            // 
+            // sesDateLabel
+            // 
+            sesDateLabel.AutoSize = true;
+            sesDateLabel.Location = new Point(6, 83);
+            sesDateLabel.Name = "sesDateLabel";
+            sesDateLabel.Padding = new Padding(0, 10, 0, 15);
+            sesDateLabel.Size = new Size(76, 40);
+            sesDateLabel.TabIndex = 5;
+            sesDateLabel.Text = "Session Date:";
+            // 
+            // sesTypeLabel
+            // 
+            sesTypeLabel.AutoSize = true;
+            sesTypeLabel.Location = new Point(6, 43);
+            sesTypeLabel.Name = "sesTypeLabel";
+            sesTypeLabel.Padding = new Padding(0, 10, 0, 15);
+            sesTypeLabel.Size = new Size(76, 40);
+            sesTypeLabel.TabIndex = 4;
+            sesTypeLabel.Text = "Session Type:";
+            // 
+            // sesNameLabel
+            // 
+            sesNameLabel.AutoSize = true;
+            sesNameLabel.Location = new Point(6, 3);
+            sesNameLabel.Name = "sesNameLabel";
+            sesNameLabel.Padding = new Padding(0, 10, 0, 15);
+            sesNameLabel.Size = new Size(84, 40);
+            sesNameLabel.TabIndex = 3;
+            sesNameLabel.Text = "Session Name:";
+            // 
+            // sesDescriptionTxt
+            // 
+            sesDescriptionTxt.Location = new Point(218, 43);
+            sesDescriptionTxt.Multiline = true;
+            sesDescriptionTxt.Name = "sesDescriptionTxt";
+            sesDescriptionTxt.ReadOnly = true;
+            sesDescriptionTxt.Size = new Size(359, 107);
+            sesDescriptionTxt.TabIndex = 2;
             // 
             // usernameLabel
             // 
@@ -351,23 +479,14 @@
             label1.Size = new Size(0, 15);
             label1.TabIndex = 32;
             // 
-            // listBox1
+            // availabilityListBox
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(16, 180);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(156, 229);
-            listBox1.TabIndex = 0;
-            // 
-            // listBox2
-            // 
-            listBox2.FormattingEnabled = true;
-            listBox2.ItemHeight = 15;
-            listBox2.Location = new Point(423, 85);
-            listBox2.Name = "listBox2";
-            listBox2.Size = new Size(154, 319);
-            listBox2.TabIndex = 1;
+            availabilityListBox.FormattingEnabled = true;
+            availabilityListBox.ItemHeight = 15;
+            availabilityListBox.Location = new Point(16, 180);
+            availabilityListBox.Name = "availabilityListBox";
+            availabilityListBox.Size = new Size(156, 229);
+            availabilityListBox.TabIndex = 0;
             // 
             // addTimeButton
             // 
@@ -377,6 +496,7 @@
             addTimeButton.TabIndex = 2;
             addTimeButton.Text = "Add Time";
             addTimeButton.UseVisualStyleBackColor = true;
+            addTimeButton.Click += addTimeButton_Click;
             // 
             // dateTimePicker1
             // 
@@ -385,14 +505,15 @@
             dateTimePicker1.Size = new Size(156, 23);
             dateTimePicker1.TabIndex = 3;
             // 
-            // button2
+            // deleteTimeButton
             // 
-            button2.Location = new Point(97, 151);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 4;
-            button2.Text = "Del. Time";
-            button2.UseVisualStyleBackColor = true;
+            deleteTimeButton.Location = new Point(97, 151);
+            deleteTimeButton.Name = "deleteTimeButton";
+            deleteTimeButton.Size = new Size(75, 23);
+            deleteTimeButton.TabIndex = 4;
+            deleteTimeButton.Text = "Del. Time";
+            deleteTimeButton.UseVisualStyleBackColor = true;
+            deleteTimeButton.Click += deleteTimeButton_Click;
             // 
             // label3
             // 
@@ -412,12 +533,12 @@
             ClientSize = new Size(800, 450);
             Controls.Add(label3);
             Controls.Add(logout);
-            Controls.Add(button2);
+            Controls.Add(deleteTimeButton);
             Controls.Add(addTimeButton);
             Controls.Add(dateTimePicker1);
             Controls.Add(label1);
             Controls.Add(trainerNameLabel);
-            Controls.Add(listBox1);
+            Controls.Add(availabilityListBox);
             Controls.Add(tabControl1);
             Controls.Add(usernameLabel);
             Controls.Add(label13);
@@ -428,7 +549,8 @@
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            tabPage2.ResumeLayout(false);
+            sessionPage.ResumeLayout(false);
+            sessionPage.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -450,7 +572,7 @@
         private Label label15;
         private TabControl tabControl1;
         private TabPage tabPage1;
-        private TabPage tabPage2;
+        private TabPage sessionPage;
         private Label usernameLabel;
         private Label label2;
         private TextBox achievementNameBox;
@@ -463,11 +585,21 @@
         private Button deleteAchivementButton;
         private ListBox achievementListBox;
         private Label label1;
-        private Button button2;
+        private Button deleteTimeButton;
         private DateTimePicker dateTimePicker1;
         private Button addTimeButton;
-        private ListBox listBox2;
-        private ListBox listBox1;
+        private ListBox availabilityListBox;
         private Label label3;
+        private TextBox sesDescriptionTxt;
+        private Label sesLocationLabel;
+        private Label sesDateLabel;
+        private Label sesTypeLabel;
+        private Label sesNameLabel;
+        private Label label9;
+        private Label sesCapacityLabel;
+        private ListBox attendingUserList;
+        private ListBox sessionListBox;
+        private Label label14;
+        private Button refreshSessions;
     }
 }

@@ -33,15 +33,14 @@ namespace FitnessCenter
 
         }
 
-        public async Task<IEnumerable<Member>> GetMembers()
+        public async Task<List<Member>> getMembers(string query)
         {
             try
             {
                 await conn.OpenAsync();
-
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT * FROM public.members ORDER BY member_id ASC";
+                cmd.CommandText = query;
 
                 var result = new List<Member>();
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -55,8 +54,8 @@ namespace FitnessCenter
                         Joined_date: reader.GetDateTime(reader.GetOrdinal("joined_date")).ToString("yyyy-MM-dd"),
                         Sex: reader.GetString(reader.GetOrdinal("sex")),
                         Member_id: reader.GetInt32(reader.GetOrdinal("member_id")),
-                        Current_weight: reader.GetInt32(reader.GetOrdinal("current_weight")),
-                        Desired_weight: reader.GetInt32(reader.GetOrdinal("desired_weight")),
+                        Current_weight: reader.GetFloat(reader.GetOrdinal("current_weight")),
+                        Desired_weight: reader.GetFloat(reader.GetOrdinal("desired_weight")),
                         Height: reader.GetInt32(reader.GetOrdinal("height")),
                         Routine_id: reader.GetInt32(reader.GetOrdinal("routine_id"))
                     ));
@@ -65,8 +64,8 @@ namespace FitnessCenter
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error fetching data: " + ex.Message);
-                return Enumerable.Empty<Member>();
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
             }
             finally
             {
@@ -162,6 +161,53 @@ namespace FitnessCenter
                         First_name: reader.GetString(reader.GetOrdinal("first_name")),
                         Last_name: reader.GetString(reader.GetOrdinal("last_name")),
                         Trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id")));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<List<Session>> getSessions(List<string> arguments, List<string> values, string operator_t = "")
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+
+                if (arguments.Count > 1 && values.Count > 1 && operator_t == "")
+                {
+                    operator_t = "AND";
+                }
+                string conditional = arguments.Count > 0 ? " WHERE" : "";
+                for (int i = 0; i < arguments.Count; i++)
+                {
+                    conditional += i - 1 == arguments.Count ? $" {arguments[i]} = {values[i]}" : $" {arguments[i]} = {values[i]} {operator_t}";
+                }
+                cmd.CommandText = $"SELECT * FROM public.Sessions{conditional}";
+
+                var result = new List<Session>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Session(
+                        session_id: reader.GetInt32(reader.GetOrdinal("session_id")),
+                        trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id")),
+                        room_number: reader.GetInt32(reader.GetOrdinal("room_number")),
+                        type: reader.GetString(reader.GetOrdinal("type")),
+                        name: reader.GetString(reader.GetOrdinal("name")),
+                        description: reader.GetString(reader.GetOrdinal("description")),
+                        date: reader.GetDateTime(reader.GetOrdinal("date")).ToString("yyyy-MM-dd"),
+                        capacity: reader.GetInt32(reader.GetOrdinal("capacity"))
+                    ));
+                }
                 return result;
             }
             catch (Exception ex)
