@@ -9,6 +9,8 @@ using FitnessCenter.Classes;
 using System.Diagnostics;
 using System.Data;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Security.Principal;
+using System.Xml.Linq;
 
 namespace FitnessCenter
 {
@@ -133,6 +135,136 @@ namespace FitnessCenter
             {
                 Debug.WriteLine("Error fetching data: " + ex.Message);
                 return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<Trainer> getTrainerByID(int id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT * FROM public.trainers WHERE trainer_id='{id}'";
+
+                Trainer result;
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.ReadAsync();
+                result = new Trainer(
+                        Username: reader.GetString(reader.GetOrdinal("username")),
+                        Password: reader.GetString(reader.GetOrdinal("pword")),
+                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                        Trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id")));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<bool> registerForSession(int member_id,  int session_id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"INSERT INTO public.registrations(session_id, member_id) " +
+                                  $"VALUES ({session_id},{member_id})";
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error adding data: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<int> countSession(int session_id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT COUNT(*) FROM public.registrations WHERE session_id = {session_id}";
+
+                var result = await cmd.ExecuteScalarAsync();
+
+                int registrationsCount = Convert.ToInt32(result);
+
+                return registrationsCount;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error counting registrations: " + ex.Message);
+                return -1;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<bool> makePayment(int member_id, float amount, int cardnumber)
+        {
+            try
+            {
+                string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"INSERT INTO public.billings(amount, member_id, card_number,date_paid) VALUES ({amount}, {member_id}, {cardnumber},'{currentDate}')";
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error adding data: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<bool> unRegisterForSession(int member_id, int session_id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"DELETE FROM public.registrations WHERE session_id = {session_id} AND member_id = {member_id};";
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error adding data: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -287,6 +419,76 @@ namespace FitnessCenter
             finally
             {
                 conn.Close();
+            }
+        }
+
+        public async Task<bool> isInSession(int member_id, int session_id)
+        {
+            try
+            {
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = $"SELECT COUNT(*) FROM public.registrations\r\nWHERE member_id='{member_id}' AND session_id = '{session_id}'";
+                var result = await cmd.ExecuteScalarAsync();
+                int count = Convert.ToInt32(result);
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error querying data: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (conn != null && conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Session>> GetSessions()
+        {
+            try
+            {
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = "SELECT * FROM public.sessions ORDER BY date ASC;";
+
+                    var result = new List<Session>();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            result.Add(new Session(
+                                name: reader.GetString(reader.GetOrdinal("name")),
+                                session_id: reader.GetInt32(reader.GetOrdinal("session_id")),
+                                trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id")),
+                                room_number: reader.GetInt32(reader.GetOrdinal("room_number")),
+                                type: reader.GetString(reader.GetOrdinal("type")),
+                                description: reader.GetString(reader.GetOrdinal("description")),
+                                capacity: reader.GetInt32(reader.GetOrdinal("capacity")),
+                                date: reader.GetDateTime(reader.GetOrdinal("date")).ToString("yyyy-MM-dd")));
+                        }
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return Enumerable.Empty<Session>(); // Return an empty enumerable instead of null
+            }
+            finally
+            {
+                if (conn != null && conn.State != ConnectionState.Closed)
+                    conn.Close();
             }
         }
 

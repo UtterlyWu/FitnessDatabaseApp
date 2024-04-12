@@ -16,11 +16,15 @@ namespace FitnessCenter
         Member me;
         DBConnection conn;
         Dictionary<int, Routine> routinedict;
+        Dictionary<int, Session> sessiondict;
+        Dictionary<int, Achievement> achdict;
         public MemberForm(Member m)
         {
             InitializeComponent();
             me = m;
             routinedict = new Dictionary<int, Routine>();
+            sessiondict = new Dictionary<int, Session>();
+            achdict = new Dictionary<int, Achievement>();
             setCurs();
             conn = new DBConnection();
 
@@ -32,6 +36,7 @@ namespace FitnessCenter
             }
 
             loadRoutines();
+
         }
 
         private void setCurs()
@@ -48,7 +53,41 @@ namespace FitnessCenter
             if (me.sex != null) { curSex.Text = "current: " + me.sex; }
             else { curSex.Text = "current: None"; }
             setRoutine.Enabled = false;
+            RegButton.Enabled = false;
         }
+
+        private async void loadSessions()
+        {
+            IEnumerable<Session> sessions = await conn.GetSessions();
+            int index = 0;
+            sessiondict.Clear();
+            Sessions.Items.Clear();
+            foreach (Session session in sessions)
+            {
+                sessiondict.Add(index, session);
+                if(await conn.isInSession(me.member_id, session.session_id))
+                {
+                    Sessions.Items.Add(session.name + " (REGISTERED)");
+                }
+                else { Sessions.Items.Add(session.name); }
+                
+                index++;
+            }
+            //loadAchievements();
+        }
+
+        //private async void loadAchievements()
+        //{
+        //    achdict.Clear();
+        //    IEnumerable<Achievement> achievements = await conn.getAchievements(me.member_id);
+        //    int index = 0;
+        //    foreach(Achievement achievement in achievements)
+        //    {
+        //        AchievementsList.Items.Add(achievement.name);
+        //        achdict.Add(index, achievement);
+        //        index++;
+        //    }
+        //}
 
         private async void loadRoutines()
         {
@@ -78,6 +117,7 @@ namespace FitnessCenter
                 }
                 else { routinedict.Add(0, routine); }
             }
+            loadSessions();
         }
 
         private void option_male_CheckedChanged(object sender, EventArgs e)
@@ -174,7 +214,7 @@ namespace FitnessCenter
             {
                 selectedRoutine = routinedict[Routines.SelectedIndex];
             }
-            
+
             RoutineDesc.Text = $"Title: {selectedRoutine.title} \n\nCategory: {selectedRoutine.catagory} \n\nDescription: {selectedRoutine.description}";
             if (selectedRoutine.routine_id == me.routine_id) { setRoutine.Enabled = false; }
             else { setRoutine.Enabled = true; }
@@ -187,6 +227,68 @@ namespace FitnessCenter
             await conn.updateAttributeInt("routine_id", me.routine_id, me.username);
             loadRoutines();
             setRoutine.Enabled = false;
+        }
+
+        private async void Sessions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RegButton.Enabled = true;
+            Session selectedSession;
+            if (Sessions.SelectedIndex == -1)
+            {
+                selectedSession = sessiondict[0];
+            }
+            else
+            {
+                selectedSession = sessiondict[Sessions.SelectedIndex];
+            }
+
+            Trainer trainer = await conn.getTrainerByID(selectedSession.trainer_id);
+            
+            SessionInfo.Text = $"{selectedSession.type}: {selectedSession.name} \n\nTrainer: {trainer.first_name} {trainer.last_name} \n\nDescription: {selectedSession.description}\n\nRoom Number: {selectedSession.room_number} \n\n {await conn.countSession(selectedSession.session_id)}/{selectedSession.capacity} registered";
+            
+            if (await conn.isInSession(me.member_id, selectedSession.session_id)) { RegButton.Text = "Unregister"; }
+            else if (await conn.countSession(selectedSession.session_id) >= selectedSession.capacity) { RegButton.Enabled = false; }
+            else { RegButton.Text = "Register"; }
+
+            DateTime selectedDate = DateTime.Parse(selectedSession.date);
+
+            monthCalendar.SetDate(selectedDate);
+        }
+
+        private async void RegButton_Click(object sender, EventArgs e)
+        {
+            Session selectedSession;
+            if (Sessions.SelectedIndex == -1)
+            {
+                selectedSession = sessiondict[0];
+            }
+            else
+            {
+                selectedSession = sessiondict[Sessions.SelectedIndex];
+            }
+
+            if(RegButton.Text== "Unregister")
+            {
+                await conn.unRegisterForSession(me.member_id, selectedSession.session_id);
+                RegButton.Text = "Register";
+            }
+            else
+            {
+                PaymentForm paymentsForm = new PaymentForm(me.member_id);
+                paymentsForm.ShowDialog();
+
+                if (paymentsForm.PaymentCompleted)
+                {
+                    await conn.registerForSession(me.member_id, selectedSession.session_id);
+                    RegButton.Text = "Unregister";
+                }
+                else
+                {
+                    return;
+                }
+            }
+            RegButton.Enabled = false;
+            loadSessions();
         }
     }
 }

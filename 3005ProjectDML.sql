@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS public.Billings CASCADE;
 DROP TABLE IF EXISTS public.Machines CASCADE;
 DROP TABLE IF EXISTS public.Availability CASCADE;
 DROP TABLE IF EXISTS public.Registrations CASCADE;
+DROP TABLE IF EXISTS public.Achievements CASCADE;
 
 CREATE TABLE public.FitnessRoutines(
 	routine_id	SERIAL,
@@ -19,13 +20,6 @@ CREATE TABLE public.FitnessRoutines(
 	PRIMARY KEY(routine_id)
 );
 
--- CREATE TABLE public.Accounts(
--- 	username	VARCHAR(80)	NOT NULL,
--- 	pword		VARCHAR(80)	NOT NULL,
--- 	account_type	VARCHAR(10)	DEFAULT 'NONE',
-
--- 	PRIMARY KEY(username, account_type)
--- );
 
 CREATE TABLE public.Members(
 	member_id	SERIAL,
@@ -80,7 +74,9 @@ CREATE TABLE public.Sessions(
 	room_number INT,
 	type		VARCHAR(255)	NOT NULL,
 	name		VARCHAR(255)	NOT NULL,
+	description	VARCHAR(1000)	NOT NULL,
 	date		DATE			NOT NULL,
+	capacity	INT				NOT NULL,
 	
 	PRIMARY KEY(session_id),
 	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id),
@@ -92,6 +88,7 @@ CREATE TABLE public.Billings(
 	amount		float(2),
 	member_id	INT,
 	card_number	INT,
+	date_paid	DATE,
 	
 	PRIMARY KEY(bill_id),
 	FOREIGN KEY(member_id) REFERENCES Members(member_id)
@@ -134,54 +131,3 @@ CREATE TABLE public.Achievements(
 	FOREIGN KEY(trainer_id) REFERENCES Trainers(trainer_id),
 	FOREIGN KEY(member_id) REFERENCES Members(member_id)
 );
-
--- CREATE OR REPLACE FUNCTION insert_into_accounts()
--- RETURNS TRIGGER AS 
--- $$
--- BEGIN
--- 	IF (TG_TABLE_NAME = 'members' OR TG_TABLE_NAME = 'trainers' OR TG_TABLE_NAME = 'adminstaff') THEN
--- 		--RAISE NOTICE '%', TG_TABLE_NAME;
--- 		INSERT INTO Accounts(username, pword, account_type)
--- 		VALUES (NEW.username, NEW.pword, TG_TABLE_NAME);
---     END IF;
--- 	RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER trigger_insert_from_members
--- BEFORE INSERT ON Members
--- 	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();
-
--- CREATE TRIGGER trigger_insert_from_trainers
--- BEFORE INSERT ON Trainers
--- 	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();
-
--- CREATE TRIGGER trigger_insert_from_admin
--- BEFORE INSERT ON AdminStaff
--- 	FOR EACH ROW EXECUTE FUNCTION insert_into_accounts();
-
--- CREATE OR REPLACE FUNCTION update_accounts()
--- RETURNS TRIGGER AS 
--- $$
--- BEGIN
--- 	IF (TG_TABLE_NAME = 'members' OR TG_TABLE_NAME = 'trainers' OR TG_TABLE_NAME = 'adminstaff') THEN
--- 		--RAISE NOTICE '%', TG_TABLE_NAME;
--- 		UPDATE Accounts
--- 		SET username = NEW.username, pword = NEW.pword;
--- 		WHERE
--- 	END IF;
--- 	RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER trigger_update_from_members
--- BEFORE UPDATE ON Members
--- 	FOR EACH ROW EXECUTE FUNCTION update_accounts();
-
--- CREATE TRIGGER trigger_update_from_trainers
--- BEFORE UPDATE ON Trainers
--- 	FOR EACH ROW EXECUTE FUNCTION update_accounts();
-
--- CREATE TRIGGER trigger_update_from_admin
--- BEFORE UPDATE ON AdminStaff
--- 	FOR EACH ROW EXECUTE FUNCTION update_accounts();
