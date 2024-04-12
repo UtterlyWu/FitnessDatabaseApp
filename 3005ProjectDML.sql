@@ -89,6 +89,7 @@ CREATE TABLE public.Billings(
 	member_id	INT,
 	card_number	INT,
 	date_paid	DATE,
+	purpose		VARCHAR(30),
 	
 	PRIMARY KEY(bill_id),
 	FOREIGN KEY(member_id) REFERENCES Members(member_id)

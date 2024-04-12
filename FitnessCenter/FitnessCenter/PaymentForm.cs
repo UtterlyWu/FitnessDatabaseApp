@@ -16,10 +16,12 @@ namespace FitnessCenter
         public bool PaymentCompleted { get; private set; }
         int member_id;
         DBConnection conn;
-        public PaymentForm(int member_id)
+        string purpose;
+        public PaymentForm(int member_id, string purpose)
         {
             InitializeComponent();
             this.member_id = member_id;
+            this.purpose = purpose;
             conn = new DBConnection();
         }
 
@@ -32,7 +34,7 @@ namespace FitnessCenter
 
             if(isNumeric1 && isNumeric2 && cardNum.Text !="" && amount.Text!="")
             {
-                await conn.makePayment(member_id, amountToPay, cardNumber);
+                await conn.makePayment(member_id, amountToPay, cardNumber, purpose);
             }
             else
             {

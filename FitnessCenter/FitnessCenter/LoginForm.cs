@@ -63,6 +63,19 @@ namespace FitnessCenter
             {
                 account_type = "adminstaff";
                 Admin q = await conn.getAdmin(usernameTB.Text);
+                if (q == null)
+                {
+                    ErrorText.Text = "Unable to login, try again.";
+                    return;
+                }
+                if (q.password != passwordTB.Text)
+                {
+                    ErrorText.Text = "Incorrect Password, try again.";
+                    return;
+                }
+                AdminForm admform = new AdminForm(q);
+                admform.Show();
+                this.Close();
             }
             else {
                 ErrorText.Text = "No option selected. Try again. Idiot.";

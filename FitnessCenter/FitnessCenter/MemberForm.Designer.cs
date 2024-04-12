@@ -63,6 +63,11 @@
             label2 = new Label();
             label1 = new Label();
             myStats = new TabPage();
+            myBMI = new Label();
+            bmi = new Button();
+            AcheivmentInfo = new RichTextBox();
+            label8 = new Label();
+            AchievementsList = new ListBox();
             ShouldWeigh = new Label();
             CurrentWeight = new Label();
             progressBar1 = new ProgressBar();
@@ -71,11 +76,6 @@
             WelcomeText = new Label();
             username = new Label();
             name = new Label();
-            AchievementsList = new ListBox();
-            label8 = new Label();
-            AcheivmentInfo = new RichTextBox();
-            bmi = new Button();
-            myBMI = new Label();
             tabControl1.SuspendLayout();
             Register.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -441,6 +441,51 @@
             myStats.Text = "My Stats";
             myStats.UseVisualStyleBackColor = true;
             // 
+            // myBMI
+            // 
+            myBMI.AutoSize = true;
+            myBMI.ForeColor = Color.Lime;
+            myBMI.Location = new Point(75, 196);
+            myBMI.Name = "myBMI";
+            myBMI.Size = new Size(0, 20);
+            myBMI.TabIndex = 10;
+            // 
+            // bmi
+            // 
+            bmi.Location = new Point(12, 161);
+            bmi.Name = "bmi";
+            bmi.Size = new Size(144, 29);
+            bmi.TabIndex = 9;
+            bmi.Text = "Calculate My BMI";
+            bmi.UseVisualStyleBackColor = true;
+            bmi.Click += bmi_Click;
+            // 
+            // AcheivmentInfo
+            // 
+            AcheivmentInfo.Location = new Point(294, 162);
+            AcheivmentInfo.Name = "AcheivmentInfo";
+            AcheivmentInfo.Size = new Size(252, 146);
+            AcheivmentInfo.TabIndex = 8;
+            AcheivmentInfo.Text = "";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(350, 29);
+            label8.Name = "label8";
+            label8.Size = new Size(137, 20);
+            label8.TabIndex = 7;
+            label8.Text = "Your Achievements:";
+            // 
+            // AchievementsList
+            // 
+            AchievementsList.FormattingEnabled = true;
+            AchievementsList.Location = new Point(320, 52);
+            AchievementsList.Name = "AchievementsList";
+            AchievementsList.Size = new Size(195, 104);
+            AchievementsList.TabIndex = 6;
+            AchievementsList.SelectedIndexChanged += AchievementsList_SelectedIndexChanged;
+            // 
             // ShouldWeigh
             // 
             ShouldWeigh.AutoSize = true;
@@ -511,49 +556,6 @@
             name.TabIndex = 37;
             name.Text = "label2";
             // 
-            // AchievementsList
-            // 
-            AchievementsList.FormattingEnabled = true;
-            AchievementsList.Location = new Point(294, 39);
-            AchievementsList.Name = "AchievementsList";
-            AchievementsList.Size = new Size(195, 104);
-            AchievementsList.TabIndex = 6;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(320, 16);
-            label8.Name = "label8";
-            label8.Size = new Size(137, 20);
-            label8.TabIndex = 7;
-            label8.Text = "Your Achievements:";
-            // 
-            // AcheivmentInfo
-            // 
-            AcheivmentInfo.Location = new Point(294, 162);
-            AcheivmentInfo.Name = "AcheivmentInfo";
-            AcheivmentInfo.Size = new Size(195, 132);
-            AcheivmentInfo.TabIndex = 8;
-            AcheivmentInfo.Text = "";
-            // 
-            // bmi
-            // 
-            bmi.Location = new Point(12, 161);
-            bmi.Name = "bmi";
-            bmi.Size = new Size(144, 29);
-            bmi.TabIndex = 9;
-            bmi.Text = "Calculate My BMI";
-            bmi.UseVisualStyleBackColor = true;
-            // 
-            // myBMI
-            // 
-            myBMI.AutoSize = true;
-            myBMI.ForeColor = Color.Lime;
-            myBMI.Location = new Point(75, 196);
-            myBMI.Name = "myBMI";
-            myBMI.Size = new Size(0, 20);
-            myBMI.TabIndex = 10;
-            // 
             // MemberForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -565,7 +567,7 @@
             Controls.Add(logout);
             Controls.Add(usernameLabel);
             Name = "MemberForm";
-            Text = "Form1";
+            Text = "Member";
             tabControl1.ResumeLayout(false);
             Register.ResumeLayout(false);
             Register.PerformLayout();

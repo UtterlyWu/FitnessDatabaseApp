@@ -226,7 +226,7 @@ namespace FitnessCenter
             }
         }
 
-        public async Task<bool> makePayment(int member_id, float amount, int cardnumber)
+        public async Task<bool> makePayment(int member_id, float amount, int cardnumber, string purpose)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace FitnessCenter
 
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = $"INSERT INTO public.billings(amount, member_id, card_number,date_paid) VALUES ({amount}, {member_id}, {cardnumber},'{currentDate}')";
+                cmd.CommandText = $"INSERT INTO public.billings(amount, member_id, card_number,date_paid,purpose) VALUES ({amount}, {member_id}, {cardnumber},'{currentDate}', {purpose})";
                 cmd.ExecuteNonQuery();
                 return true;
             }
@@ -596,9 +596,13 @@ namespace FitnessCenter
                 {
                     cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}','{currentDate}');";
                 }
-                else if (type == "trainers" || type == "admins")
+                else if (type == "trainers")
                 {
-                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,joined_date)\r\nVALUES\r\n\t('{username}','{password}','{first_name}','{last_name}',{currentDate});";
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name) VALUES ('{username}','{password}','{first_name}','{last_name}');";
+                }
+                else
+                {
+                    cmd.CommandText = $"INSERT INTO public.{type}(username,pword,first_name,last_name,position) VALUES ('{username}','{password}','{first_name}','{last_name}','');";
                 }
 
                 using var reader = await cmd.ExecuteReaderAsync();

@@ -54,6 +54,41 @@ namespace FitnessCenter
             else { curSex.Text = "current: None"; }
             setRoutine.Enabled = false;
             RegButton.Enabled = false;
+
+            WelcomeText.Text = $"Welcome {me.first_name}! Here's some stats!";
+            if (me.current_weight != -1)
+            {
+                Weight.Text = $"Weight: {me.current_weight}lbs";
+                CurrentWeight.Text = $"You Weigh {me.current_weight}lbs";
+            }
+
+            if (me.desired_weight != -1)
+            {
+                ShouldWeigh.Text = $"You Should Weigh: {me.desired_weight}lbs";
+            }
+
+            if (me.height != -1)
+            {
+                Height.Text = $"Height: {me.height}cm";
+            }
+
+            if (me.desired_weight != -1 && me.current_weight != -1)
+            {
+                if (me.current_weight < me.desired_weight)
+                {
+                    progressBar1.Minimum = 0;
+                    progressBar1.Maximum = (int)me.desired_weight;
+                    progressBar1.Value = (int)me.current_weight;
+                }
+                else
+                {
+                    progressBar1.Minimum = 0;
+                    progressBar1.Maximum = (int)me.current_weight;
+                    progressBar1.Value = (int)me.desired_weight;
+                }
+
+            }
+
         }
 
         private async void loadSessions()
@@ -65,29 +100,30 @@ namespace FitnessCenter
             foreach (Session session in sessions)
             {
                 sessiondict.Add(index, session);
-                if(await conn.isInSession(me.member_id, session.session_id))
+                if (await conn.isInSession(me.member_id, session.session_id))
                 {
                     Sessions.Items.Add(session.name + " (REGISTERED)");
                 }
                 else { Sessions.Items.Add(session.name); }
-                
+
                 index++;
             }
-            //loadAchievements();
+            loadAchievements();
         }
 
-        //private async void loadAchievements()
-        //{
-        //    achdict.Clear();
-        //    IEnumerable<Achievement> achievements = await conn.getAchievements(me.member_id);
-        //    int index = 0;
-        //    foreach(Achievement achievement in achievements)
-        //    {
-        //        AchievementsList.Items.Add(achievement.name);
-        //        achdict.Add(index, achievement);
-        //        index++;
-        //    }
-        //}
+        private async void loadAchievements()
+        {
+            achdict.Clear();
+            IEnumerable<Achievement> achievements = await conn.getAchievements(new List<string> { "member_id" }, new List<string> { me.member_id.ToString() });
+            int index = 0;
+
+            foreach (Achievement achievement in achievements)
+            {
+                AchievementsList.Items.Add(achievement.name);
+                achdict.Add(index, achievement);
+                index++;
+            }
+        }
 
         private async void loadRoutines()
         {
@@ -196,6 +232,7 @@ namespace FitnessCenter
             if (option_male.Checked && me.sex != "male") { await conn.updateAttributeStr("sex", "male", "members", me.username); curSex.Text = "current: male"; }
             if (option_female.Checked && me.sex != "female") { await conn.updateAttributeStr("sex", "female", "members", me.username); curSex.Text = "current: female"; }
             if (option_other.Checked && me.sex != "other") { await conn.updateAttributeStr("sex", "other", "members", me.username); curSex.Text = "current: other"; }
+            setCurs();
         }
 
         private void Routines_SelectedIndexChanged(object sender, EventArgs e)
@@ -243,9 +280,9 @@ namespace FitnessCenter
             }
 
             Trainer trainer = await conn.getTrainerByID(selectedSession.trainer_id);
-            
+
             SessionInfo.Text = $"{selectedSession.type}: {selectedSession.name} \n\nTrainer: {trainer.first_name} {trainer.last_name} \n\nDescription: {selectedSession.description}\n\nRoom Number: {selectedSession.room_number} \n\n {await conn.countSession(selectedSession.session_id)}/{selectedSession.capacity} registered";
-            
+
             if (await conn.isInSession(me.member_id, selectedSession.session_id)) { RegButton.Text = "Unregister"; }
             else if (await conn.countSession(selectedSession.session_id) >= selectedSession.capacity) { RegButton.Enabled = false; }
             else { RegButton.Text = "Register"; }
@@ -267,14 +304,14 @@ namespace FitnessCenter
                 selectedSession = sessiondict[Sessions.SelectedIndex];
             }
 
-            if(RegButton.Text== "Unregister")
+            if (RegButton.Text == "Unregister")
             {
                 await conn.unRegisterForSession(me.member_id, selectedSession.session_id);
                 RegButton.Text = "Register";
             }
             else
             {
-                PaymentForm paymentsForm = new PaymentForm(me.member_id);
+                PaymentForm paymentsForm = new PaymentForm(me.member_id,"Session");
                 paymentsForm.ShowDialog();
 
                 if (paymentsForm.PaymentCompleted)
@@ -289,6 +326,33 @@ namespace FitnessCenter
             }
             RegButton.Enabled = false;
             loadSessions();
+        }
+
+        private async void AchievementsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RegButton.Enabled = true;
+            Achievement selectedAchievement = achdict[AchievementsList.SelectedIndex];
+           
+            Trainer trainer = await conn.getTrainerByID(selectedAchievement.trainer_id);
+
+            AcheivmentInfo.Text = $"name: {selectedAchievement.name}\n\nAwarded By: {trainer.first_name} {trainer.last_name} on {selectedAchievement.date}\n\nDescription: {selectedAchievement.description}";
+
+        }
+
+        private void bmi_Click(object sender, EventArgs e)
+        {
+            if(me.current_weight==-1 || me.height==-1) {myBMI.Text = "cannot calculate";myBMI.ForeColor = Color.Black; return; }
+            double weightInKg = me.current_weight * 0.453592;
+
+            double heightInM = me.height / 100.0;
+
+            double BMICalc = weightInKg / (heightInM * heightInM);
+            BMICalc =  Math.Round(BMICalc, 2);
+
+
+            myBMI.Text = BMICalc.ToString();
+            if(BMICalc > 30 || BMICalc < 18.5) { myBMI.ForeColor = Color.Red; }
+            else { myBMI.ForeColor = Color.DarkGreen; }
         }
     }
 }

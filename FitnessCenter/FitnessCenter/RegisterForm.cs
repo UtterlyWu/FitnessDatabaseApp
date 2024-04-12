@@ -99,6 +99,10 @@ namespace FitnessCenter
                 }
                 conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "adminstaff");
                 Admin a = await conn.getAdmin(username.Text);
+                AdminForm adminForm = new AdminForm(a);
+                adminForm.Show();
+                this.Close();
+                return;
             }
         }
     }
