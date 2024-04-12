@@ -24,5 +24,10 @@ namespace FitnessCenter.Classes
             date = Date;
             trainer_id = Trainer_id;
         }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

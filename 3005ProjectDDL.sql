@@ -33,7 +33,7 @@ VALUES
 
 INSERT INTO public.members(username,pword,first_name,last_name,current_weight,desired_weight,height,joined_date,sex,routine_id,desired_date)
 VALUES
-	('member1','password','Ari','Rubin',174,165,175,'2023-05-26','Male',1,'2024-05-26'),
+	('member1','password','Ari','Rubin',450,1,175,'2023-05-26','Male',1,'2024-05-26'),
 	('member2','password','Patrick','Wu',253,350,167,'2023-09-03','Male',3,'2024-05-24'),
 	('member3','password','Marco','Toito',154,155,179,'2023-02-16','Male',2,'2025-05-29'),
 	('member4','password','Caitlin','Wunderlich',124,129,166,'2023-03-26','Female',1,'2024-05-21');
