@@ -365,7 +365,7 @@ namespace FitnessCenter
             }
         }
 
-        public async Task<Int32> addAchievement(String name, String description, int member_id, string date, int trainer_id)
+        public async Task<Int32> nonGetQuery(string query, bool returning)
         {
             try
             {
@@ -373,9 +373,16 @@ namespace FitnessCenter
 
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = $"INSERT INTO public.Achievements(name, description, member_id, date, trainer_id) " +
-                                  $"VALUES ('{name}', '{description}', {member_id}, '{date}', {trainer_id}) RETURNING achievement_id";
-                return (int)cmd.ExecuteScalar();
+                cmd.CommandText = query;
+                if (returning)
+                {
+                    return (int)cmd.ExecuteScalar();
+                }
+                else
+                {
+                    cmd.ExecuteNonQuery();
+                    return 0;
+                }
 
             }
             catch (Exception ex)
@@ -669,6 +676,37 @@ namespace FitnessCenter
                     
                 }
 
+            }
+        }
+
+        public async Task<List<Availability>> getAvailability(string query)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = query;
+
+                var result = new List<Availability>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Availability(
+                        date: reader.GetDateTime(reader.GetOrdinal("date")).ToString("yyyy-MM-dd"),
+                        trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id"))
+                    ));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }

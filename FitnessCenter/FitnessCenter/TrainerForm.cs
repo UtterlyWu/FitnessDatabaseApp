@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using FitnessCenter.Classes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FitnessCenter
 {
@@ -30,6 +32,8 @@ namespace FitnessCenter
 
             usernameLabel.Text = $"Logged in as: {user.username}";
             trainerNameLabel.Text = $"Name: {user.first_name} {user.last_name}";
+            dateTimePicker.MinDate = DateTime.Now;
+            refresh_availability();
         }
 
         void achievement_form_closed(object sender, FormClosedEventArgs e)
@@ -61,6 +65,19 @@ namespace FitnessCenter
                 for (int i = 0; i < sessions.Count; i++)
                 {
                     sessionListBox.Items.Add(sessions[i]);
+                }
+            }
+        }
+
+        async void refresh_availability()
+        {
+            availabilityListBox.Items.Clear();
+            List<Availability> availabilities = await conn.getAvailability($"SELECT * FROM Availability WHERE trainer_id = {user.trainer_id}");
+            if (availabilities != null)
+            {
+                for (int i = 0; i < availabilities.Count; i++)
+                {
+                    availabilityListBox.Items.Add(availabilities[i]);
                 }
             }
         }
@@ -142,32 +159,39 @@ namespace FitnessCenter
             {
                 DateTime myDateTime = DateTime.Now;
                 string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd");
-                int achievement_id = await conn.addAchievement(achievementNameBox.Text, achievementDescriptionBox.Text, selected_mem.member_id, sqlFormattedDate, user.trainer_id);
+                int achievement_id = await conn.nonGetQuery($"INSERT INTO public.Achievements(name, description, member_id, date, trainer_id) VALUES ('{achievementNameBox.Text}', '{achievementDescriptionBox.Text}', {selected_mem.member_id}, '{sqlFormattedDate}', {user.trainer_id}) RETURNING achievement_id", true);
                 achievementListBox.Items.Add(new Achievement(achievement_id, achievementNameBox.Text, achievementDescriptionBox.Text, selected_mem.member_id, sqlFormattedDate, user.trainer_id));
                 achievementNameBox.Text = "";
                 achievementDescriptionBox.Text = "";
             }
         }
 
-        private void addTimeButton_Click(object sender, EventArgs e)
+        private async void addTimeButton_Click(object sender, EventArgs e)
         {
-
+            await conn.nonGetQuery($"INSERT INTO Availability(date, trainer_id) VALUES ('{dateTimePicker.Value.ToString("yyyy-MM-dd")}', {user.trainer_id})", false);
+            Availability to_add = new Availability(dateTimePicker.Value.ToString("yyyy-MM-dd"), user.trainer_id);
+            availabilityListBox.Items.Add(to_add);
         }
 
         private void deleteTimeButton_Click(object sender, EventArgs e)
         {
-
+            Availability selected_availability = (Availability)availabilityListBox.SelectedItem;
+            if (selected_availability != null)
+            {
+                conn.nonGetQuery($"DELETE FROM Availability WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}", false);
+                refresh_availability();
+            }
         }
 
         private async void refreshSelectedSession()
         {
             Session selected_session = (Session)sessionListBox.SelectedItem;
-            if (selected_session != null) 
+            if (selected_session != null)
             {
                 sesNameLabel.Text = $"Session Name: {selected_session.name}";
                 sesLocationLabel.Text = $"Room Number: {selected_session.room_number}";
                 sesTypeLabel.Text = $"Session Type: {selected_session.type}";
-                sesDescriptionTxt.Text = $"Session Description: {selected_session.description}";
+                sesDescriptionTxt.Text = $"{selected_session.description}";
                 sesDateLabel.Text = $"Session Date: {selected_session.date}";
 
                 attendingUserList.Items.Clear();
@@ -209,6 +233,11 @@ namespace FitnessCenter
             refresh_sessions();
             refreshSelectedSession();
 
+        }
+
+        private void dateTimePicker_DropDown(object sender, EventArgs e)
+        {
+            dateTimePicker.MinDate = DateTime.Now;
         }
     }
 }

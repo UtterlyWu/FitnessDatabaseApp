@@ -69,7 +69,7 @@
             label1 = new Label();
             availabilityListBox = new ListBox();
             addTimeButton = new Button();
-            dateTimePicker1 = new DateTimePicker();
+            dateTimePicker = new DateTimePicker();
             deleteTimeButton = new Button();
             label3 = new Label();
             tabControl1.SuspendLayout();
@@ -498,12 +498,13 @@
             addTimeButton.UseVisualStyleBackColor = true;
             addTimeButton.Click += addTimeButton_Click;
             // 
-            // dateTimePicker1
+            // dateTimePicker
             // 
-            dateTimePicker1.Location = new Point(16, 122);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(156, 23);
-            dateTimePicker1.TabIndex = 3;
+            dateTimePicker.Location = new Point(16, 122);
+            dateTimePicker.Name = "dateTimePicker";
+            dateTimePicker.Size = new Size(156, 23);
+            dateTimePicker.TabIndex = 3;
+            dateTimePicker.DropDown += dateTimePicker_DropDown;
             // 
             // deleteTimeButton
             // 
@@ -535,7 +536,7 @@
             Controls.Add(logout);
             Controls.Add(deleteTimeButton);
             Controls.Add(addTimeButton);
-            Controls.Add(dateTimePicker1);
+            Controls.Add(dateTimePicker);
             Controls.Add(label1);
             Controls.Add(trainerNameLabel);
             Controls.Add(availabilityListBox);
@@ -586,7 +587,7 @@
         private ListBox achievementListBox;
         private Label label1;
         private Button deleteTimeButton;
-        private DateTimePicker dateTimePicker1;
+        private DateTimePicker dateTimePicker;
         private Button addTimeButton;
         private ListBox availabilityListBox;
         private Label label3;
