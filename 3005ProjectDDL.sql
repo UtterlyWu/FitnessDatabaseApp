@@ -37,3 +37,9 @@ VALUES
 	('member2','password','Patrick','Wu',253,350,167,'2023-09-03','Male',3,'2024-05-24'),
 	('member3','password','Marco','Toito',154,155,179,'2023-02-16','Male',2,'2025-05-29'),
 	('member4','password','Caitlin','Wunderlich',124,129,166,'2023-03-26','Female',1,'2024-05-21');
+
+INSERT INTO public.Sessions (trainer_id, room_number, type, name, description, date, capacity)
+VALUES
+    (1, 1, 'single', 'Morning Yoga', 'Relaxing yoga session to start your day', '2024-04-15', 20),
+    (2, 2, 'group', 'High-Intensity Interval Training', 'Intense cardio workout for fitness enthusiasts', '2024-04-16', 15),
+    (3, 3, 'group Training', 'Full Body Strength Workout', 'Strength training session focusing on all major muscle groups', '2024-04-17', 10);

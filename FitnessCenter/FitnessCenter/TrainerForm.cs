@@ -81,8 +81,11 @@ namespace FitnessCenter
             LoginForm loginfrm = new LoginForm();
             loginfrm.Show();
             this.Close();
-            cur_viewed_achievement.Close();
-        }
+            if (cur_viewed_achievement != null)
+            {
+                cur_viewed_achievement.Close();
+            }
+         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -32,15 +32,18 @@
             usernameLabel = new Label();
             tabControl1 = new TabControl();
             Register = new TabPage();
+            SessionInfo = new RichTextBox();
             errorText = new Label();
-            button1 = new Button();
-            monthCalendar1 = new MonthCalendar();
+            RegButton = new Button();
+            monthCalendar = new MonthCalendar();
             Sessions = new ListBox();
             tabPage2 = new TabPage();
+            RoutineDesc = new RichTextBox();
+            ErrorTextSS = new Label();
             setRoutine = new Button();
             label7 = new Label();
-            listBox1 = new ListBox();
-            button2 = new Button();
+            Routines = new ListBox();
+            SetAttributes = new Button();
             curSex = new Label();
             curDesWeight = new Label();
             curWeight = new Label();
@@ -59,22 +62,36 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
+            myStats = new TabPage();
+            ShouldWeigh = new Label();
+            CurrentWeight = new Label();
+            progressBar1 = new ProgressBar();
+            Height = new Label();
+            Weight = new Label();
+            WelcomeText = new Label();
             username = new Label();
             name = new Label();
+            AchievementsList = new ListBox();
+            label8 = new Label();
+            AcheivmentInfo = new RichTextBox();
+            bmi = new Button();
+            myBMI = new Label();
             tabControl1.SuspendLayout();
             Register.SuspendLayout();
             tabPage2.SuspendLayout();
+            myStats.SuspendLayout();
             SuspendLayout();
             // 
             // logout
             // 
-            logout.Location = new Point(12, 151);
+            logout.Location = new Point(12, 147);
             logout.Margin = new Padding(3, 4, 3, 4);
             logout.Name = "logout";
             logout.Size = new Size(86, 31);
             logout.TabIndex = 33;
             logout.Text = "Logout";
             logout.UseVisualStyleBackColor = true;
+            logout.Click += logout_Click;
             // 
             // usernameLabel
             // 
@@ -90,6 +107,7 @@
             // 
             tabControl1.Controls.Add(Register);
             tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(myStats);
             tabControl1.Location = new Point(152, 14);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -98,9 +116,10 @@
             // 
             // Register
             // 
+            Register.Controls.Add(SessionInfo);
             Register.Controls.Add(errorText);
-            Register.Controls.Add(button1);
-            Register.Controls.Add(monthCalendar1);
+            Register.Controls.Add(RegButton);
+            Register.Controls.Add(monthCalendar);
             Register.Controls.Add(Sessions);
             Register.Location = new Point(4, 29);
             Register.Name = "Register";
@@ -110,45 +129,57 @@
             Register.Text = "Class Registration";
             Register.UseVisualStyleBackColor = true;
             // 
+            // SessionInfo
+            // 
+            SessionInfo.Location = new Point(6, 175);
+            SessionInfo.Name = "SessionInfo";
+            SessionInfo.ReadOnly = true;
+            SessionInfo.Size = new Size(271, 220);
+            SessionInfo.TabIndex = 4;
+            SessionInfo.Text = "";
+            // 
             // errorText
             // 
             errorText.AutoSize = true;
             errorText.ForeColor = Color.Red;
             errorText.Location = new Point(361, 290);
             errorText.Name = "errorText";
-            errorText.Size = new Size(50, 20);
+            errorText.Size = new Size(0, 20);
             errorText.TabIndex = 3;
-            errorText.Text = "label1";
             // 
-            // button1
+            // RegButton
             // 
-            button1.Location = new Point(319, 323);
-            button1.Name = "button1";
-            button1.Size = new Size(138, 54);
-            button1.TabIndex = 2;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            RegButton.Location = new Point(329, 331);
+            RegButton.Name = "RegButton";
+            RegButton.Size = new Size(161, 64);
+            RegButton.TabIndex = 2;
+            RegButton.Text = "Register";
+            RegButton.UseVisualStyleBackColor = true;
+            RegButton.Click += RegButton_Click;
             // 
-            // monthCalendar1
+            // monthCalendar
             // 
-            monthCalendar1.Location = new Point(255, 16);
-            monthCalendar1.Name = "monthCalendar1";
-            monthCalendar1.TabIndex = 1;
+            monthCalendar.Location = new Point(289, 16);
+            monthCalendar.Name = "monthCalendar";
+            monthCalendar.TabIndex = 1;
             // 
             // Sessions
             // 
             Sessions.FormattingEnabled = true;
-            Sessions.Location = new Point(20, 16);
+            Sessions.Location = new Point(6, 16);
             Sessions.Name = "Sessions";
-            Sessions.Size = new Size(201, 384);
+            Sessions.Size = new Size(271, 144);
             Sessions.TabIndex = 0;
+            Sessions.SelectedIndexChanged += Sessions_SelectedIndexChanged;
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(RoutineDesc);
+            tabPage2.Controls.Add(ErrorTextSS);
             tabPage2.Controls.Add(setRoutine);
             tabPage2.Controls.Add(label7);
-            tabPage2.Controls.Add(listBox1);
-            tabPage2.Controls.Add(button2);
+            tabPage2.Controls.Add(Routines);
+            tabPage2.Controls.Add(SetAttributes);
             tabPage2.Controls.Add(curSex);
             tabPage2.Controls.Add(curDesWeight);
             tabPage2.Controls.Add(curWeight);
@@ -172,8 +203,26 @@
             tabPage2.Padding = new Padding(3);
             tabPage2.Size = new Size(563, 430);
             tabPage2.TabIndex = 1;
-            tabPage2.Text = "Set My Stats";
+            tabPage2.Text = "Edit Profile";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // RoutineDesc
+            // 
+            RoutineDesc.Location = new Point(319, 208);
+            RoutineDesc.Name = "RoutineDesc";
+            RoutineDesc.ReadOnly = true;
+            RoutineDesc.Size = new Size(220, 120);
+            RoutineDesc.TabIndex = 23;
+            RoutineDesc.Text = "";
+            // 
+            // ErrorTextSS
+            // 
+            ErrorTextSS.AutoSize = true;
+            ErrorTextSS.ForeColor = Color.Red;
+            ErrorTextSS.Location = new Point(412, 389);
+            ErrorTextSS.Name = "ErrorTextSS";
+            ErrorTextSS.Size = new Size(0, 20);
+            ErrorTextSS.TabIndex = 22;
             // 
             // setRoutine
             // 
@@ -183,6 +232,7 @@
             setRoutine.TabIndex = 21;
             setRoutine.Text = "Set Routine";
             setRoutine.UseVisualStyleBackColor = true;
+            setRoutine.Click += setRoutine_Click;
             // 
             // label7
             // 
@@ -193,22 +243,24 @@
             label7.TabIndex = 20;
             label7.Text = "Select a new routine:";
             // 
-            // listBox1
+            // Routines
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(358, 44);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(171, 284);
-            listBox1.TabIndex = 19;
+            Routines.FormattingEnabled = true;
+            Routines.Location = new Point(319, 44);
+            Routines.Name = "Routines";
+            Routines.Size = new Size(220, 144);
+            Routines.TabIndex = 19;
+            Routines.SelectedIndexChanged += Routines_SelectedIndexChanged;
             // 
-            // button2
+            // SetAttributes
             // 
-            button2.Location = new Point(181, 271);
-            button2.Name = "button2";
-            button2.Size = new Size(94, 71);
-            button2.TabIndex = 18;
-            button2.Text = "SET";
-            button2.UseVisualStyleBackColor = true;
+            SetAttributes.Location = new Point(181, 271);
+            SetAttributes.Name = "SetAttributes";
+            SetAttributes.Size = new Size(94, 71);
+            SetAttributes.TabIndex = 18;
+            SetAttributes.Text = "SET";
+            SetAttributes.UseVisualStyleBackColor = true;
+            SetAttributes.Click += setAttribues_click;
             // 
             // curSex
             // 
@@ -369,6 +421,78 @@
             label1.TabIndex = 0;
             label1.Text = "First name:";
             // 
+            // myStats
+            // 
+            myStats.Controls.Add(myBMI);
+            myStats.Controls.Add(bmi);
+            myStats.Controls.Add(AcheivmentInfo);
+            myStats.Controls.Add(label8);
+            myStats.Controls.Add(AchievementsList);
+            myStats.Controls.Add(ShouldWeigh);
+            myStats.Controls.Add(CurrentWeight);
+            myStats.Controls.Add(progressBar1);
+            myStats.Controls.Add(Height);
+            myStats.Controls.Add(Weight);
+            myStats.Controls.Add(WelcomeText);
+            myStats.Location = new Point(4, 29);
+            myStats.Name = "myStats";
+            myStats.Size = new Size(563, 430);
+            myStats.TabIndex = 2;
+            myStats.Text = "My Stats";
+            myStats.UseVisualStyleBackColor = true;
+            // 
+            // ShouldWeigh
+            // 
+            ShouldWeigh.AutoSize = true;
+            ShouldWeigh.Location = new Point(350, 341);
+            ShouldWeigh.Name = "ShouldWeigh";
+            ShouldWeigh.Size = new Size(149, 20);
+            ShouldWeigh.TabIndex = 5;
+            ShouldWeigh.Text = "You SHOULD Weight:";
+            // 
+            // CurrentWeight
+            // 
+            CurrentWeight.AutoSize = true;
+            CurrentWeight.Location = new Point(3, 341);
+            CurrentWeight.Name = "CurrentWeight";
+            CurrentWeight.Size = new Size(145, 20);
+            CurrentWeight.TabIndex = 4;
+            CurrentWeight.Text = "You Currently Weigh:";
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(12, 380);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(519, 29);
+            progressBar1.TabIndex = 3;
+            // 
+            // Height
+            // 
+            Height.AutoSize = true;
+            Height.Location = new Point(12, 115);
+            Height.Name = "Height";
+            Height.Size = new Size(50, 20);
+            Height.TabIndex = 2;
+            Height.Text = "label8";
+            // 
+            // Weight
+            // 
+            Weight.AutoSize = true;
+            Weight.Location = new Point(12, 78);
+            Weight.Name = "Weight";
+            Weight.Size = new Size(50, 20);
+            Weight.TabIndex = 1;
+            Weight.Text = "label8";
+            // 
+            // WelcomeText
+            // 
+            WelcomeText.AutoSize = true;
+            WelcomeText.Location = new Point(12, 16);
+            WelcomeText.Name = "WelcomeText";
+            WelcomeText.Size = new Size(71, 20);
+            WelcomeText.TabIndex = 0;
+            WelcomeText.Text = "Welcome";
+            // 
             // username
             // 
             username.AutoSize = true;
@@ -387,6 +511,49 @@
             name.TabIndex = 37;
             name.Text = "label2";
             // 
+            // AchievementsList
+            // 
+            AchievementsList.FormattingEnabled = true;
+            AchievementsList.Location = new Point(294, 39);
+            AchievementsList.Name = "AchievementsList";
+            AchievementsList.Size = new Size(195, 104);
+            AchievementsList.TabIndex = 6;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(320, 16);
+            label8.Name = "label8";
+            label8.Size = new Size(137, 20);
+            label8.TabIndex = 7;
+            label8.Text = "Your Achievements:";
+            // 
+            // AcheivmentInfo
+            // 
+            AcheivmentInfo.Location = new Point(294, 162);
+            AcheivmentInfo.Name = "AcheivmentInfo";
+            AcheivmentInfo.Size = new Size(195, 132);
+            AcheivmentInfo.TabIndex = 8;
+            AcheivmentInfo.Text = "";
+            // 
+            // bmi
+            // 
+            bmi.Location = new Point(12, 161);
+            bmi.Name = "bmi";
+            bmi.Size = new Size(144, 29);
+            bmi.TabIndex = 9;
+            bmi.Text = "Calculate My BMI";
+            bmi.UseVisualStyleBackColor = true;
+            // 
+            // myBMI
+            // 
+            myBMI.AutoSize = true;
+            myBMI.ForeColor = Color.Lime;
+            myBMI.Location = new Point(75, 196);
+            myBMI.Name = "myBMI";
+            myBMI.Size = new Size(0, 20);
+            myBMI.TabIndex = 10;
+            // 
             // MemberForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -404,6 +571,8 @@
             Register.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            myStats.ResumeLayout(false);
+            myStats.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -420,7 +589,7 @@
         private MonthCalendar monthCalendar1;
         private ListBox Sessions;
         private Label errorText;
-        private Button button1;
+        private Button RegButton;
         private Label label1;
         private CheckBox checkBox3;
         private CheckBox checkBox2;
@@ -448,8 +617,25 @@
         private TextBox setHeight;
         private TextBox setLS;
         private TextBox setFN;
-        private ListBox listBox1;
+        private ListBox Routines;
         private Button setRoutine;
         private Label label7;
+        private Button SetAttributes;
+        private Label ErrorTextSS;
+        private RichTextBox RoutineDesc;
+        private RichTextBox SessionInfo;
+        private MonthCalendar monthCalendar;
+        private TabPage myStats;
+        private Label CurrentWeight;
+        private ProgressBar progressBar1;
+        private Label Height;
+        private Label Weight;
+        private Label WelcomeText;
+        private Label ShouldWeigh;
+        private Label myBMI;
+        private Button bmi;
+        private RichTextBox AcheivmentInfo;
+        private Label label8;
+        private ListBox AchievementsList;
     }
 }

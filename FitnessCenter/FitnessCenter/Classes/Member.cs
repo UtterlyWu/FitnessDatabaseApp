@@ -14,12 +14,13 @@ namespace FitnessCenter.Classes
         public float current_weight;
         public float desired_weight;
         public float height;
+        public int routine_id;
 
         public Member(String Username, String Password, String First_name, String Last_name) : base(Username, Password, First_name, Last_name, "members")
         {
         }
 
-        public Member(String Username, String Password, String First_name, String Last_name, String Joined_date, String Sex, int Member_id, float Current_weight, float Desired_weight, float Height)
+        public Member(String Username, String Password, String First_name, String Last_name, String Joined_date, String Sex, int Member_id, float Current_weight, float Desired_weight, float Height, int Routine_id)
         : base(Username, Password, First_name, Last_name, "members")
         {
             joined_date = Joined_date;
@@ -28,6 +29,7 @@ namespace FitnessCenter.Classes
             current_weight = Current_weight;
             desired_weight = Desired_weight;
             height = Height;
+            routine_id = Routine_id;
         }
 
     }
