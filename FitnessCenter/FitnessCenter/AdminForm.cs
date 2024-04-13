@@ -22,6 +22,7 @@ namespace FitnessCenter
         Dictionary<string, int> words_to_index;
         Dictionary<string, int> trainers_to_index;
         Dictionary<int, int> rooms_to_index;
+        Dictionary<int, int> index_to_rooms;
         public AdminForm(Admin admin)
         {
             InitializeComponent();
@@ -35,8 +36,24 @@ namespace FitnessCenter
             };
             trainers_to_index = new Dictionary<string, int>();
             rooms_to_index = new Dictionary<int, int>();
-
+            index_to_rooms = new Dictionary<int, int>();
             refreshSessionListBox();
+        }
+
+        public async Task loadRooms1()
+        {
+            List<Room> rooms = await conn.getRooms("SELECT * FROM Rooms;");
+            Rooms.Items.Clear();
+            rooms_to_index.Clear();
+            index_to_rooms.Clear();
+            for (int i = 0; i < rooms.Count(); i++)
+            {
+                Rooms.Items.Add(rooms[i].room_number);//Ari Code
+                rooms_to_index.Add(rooms[i].room_number, i);
+                index_to_rooms.Add(i, rooms[i].room_number);
+                machineRoomCombo.Items.Add(rooms[i]);
+                Debug.WriteLine(rooms[i]);
+            }
         }
 
         public async Task loadRooms()
@@ -44,7 +61,6 @@ namespace FitnessCenter
             List<Room> rooms = await conn.getRooms("SELECT * FROM Rooms;");
             for (int i = 0; i < rooms.Count; i++)
             {
-                rooms_to_index.Add(rooms[i].room_number, i);
                 machineRoomCombo.Items.Add(rooms[i]);
                 Debug.WriteLine(rooms[i]);
             }
@@ -58,18 +74,20 @@ namespace FitnessCenter
             {
                 sessionListBox.Items.Add(session);
             }
+            await loadRooms1();
         }
 
         public async Task refreshDisplayedSession()
         {
             Session local_selected_session = (Session)sessionListBox.SelectedItem;
-            if (local_selected_session != null)
+            if (local_selected_session != null && await conn.getSessions($"SELECT * FROM Sessions WHERE session_id = {local_selected_session.session_id};")!=null)
             {
+                Debug.WriteLine("Trying to get id " + local_selected_session.session_id);
                 Session selectedSession = (await conn.getSessions($"SELECT * FROM Sessions WHERE session_id = {local_selected_session.session_id};"))[0];
                 Trainer trainer = await conn.getTrainerByID(selectedSession.trainer_id);
                 nameTextBox.Text = selectedSession.name;
                 trainerTextBox.Text = trainer == null ? "" : trainer.username;
-                roomTextBox.Text = selectedSession.room_number.ToString();
+                Rooms.SelectedIndex = rooms_to_index[selectedSession.room_number];
                 typeComboBox.SelectedIndex = words_to_index[selectedSession.type];
                 sesDescriptionTxt.Text = selectedSession.description;
                 dateTextBox.Text = selectedSession.date;
@@ -85,7 +103,7 @@ namespace FitnessCenter
             {
                 nameTextBox.Text = "";
                 trainerTextBox.Text = "";
-                roomTextBox.Text = "";
+                Rooms.SelectedIndex = 0;
                 typeComboBox.SelectedIndex = 0;
                 sesDescriptionTxt.Text = "";
                 dateTextBox.Text = "";
@@ -184,7 +202,7 @@ namespace FitnessCenter
         {
             Trainer trainer = await conn.getTrainer(trainerTextBox.Text);
             await conn.nonGetQuery($"INSERT INTO Sessions(name, trainer_id, room_number, type, description, date, capacity) " +
-                                   $"VALUES ('{nameTextBox.Text}', {trainer.trainer_id}, {roomTextBox.Text}, '{typeComboBox.SelectedItem}', '{sesDescriptionTxt.Text}', '{dateTextBox.Text}', {capacityTextBox.Text})" +
+                                   $"VALUES ('{nameTextBox.Text}', {trainer.trainer_id}, {index_to_rooms[Rooms.SelectedIndex]}, '{typeComboBox.SelectedItem}', '{sesDescriptionTxt.Text}', '{dateTextBox.Text}', {capacityTextBox.Text})" +
                                    $"RETURNING session_id;", false);
             await refreshSessionListBox();
             sessionListBox.SelectedIndex = sessionListBox.Items.Count - 1;
@@ -218,7 +236,7 @@ namespace FitnessCenter
             await conn.nonGetQuery($"UPDATE Sessions " +
                                    $"SET name = '{nameTextBox.Text}', " +
                                    $"trainer_id = {trainer.trainer_id}, " +
-                                   $"room_number = {roomTextBox.Text}, " +
+                                   $"room_number = {index_to_rooms[Rooms.SelectedIndex]}, " +
                                    $"type = '{typeComboBox.SelectedItem}', " +
                                    $"description = '{sesDescriptionTxt.Text}', " +
                                    $"date = '{dateTextBox.Text}', " +
@@ -271,6 +289,11 @@ namespace FitnessCenter
             int selected_machine_index = machineListBox.SelectedIndex;
             await refreshMachineBox();
             machineRoomCombo.SelectedIndex = selected_machine_index;
+        }
+
+        private void sesDateLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
