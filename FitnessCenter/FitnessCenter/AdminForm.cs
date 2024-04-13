@@ -44,9 +44,15 @@ namespace FitnessCenter
             List<Room> rooms = await conn.getRooms("SELECT * FROM Rooms;");
             for (int i = 0; i < rooms.Count; i++)
             {
-                rooms_to_index.Add(rooms[i].room_number, i);
-                machineRoomCombo.Items.Add(rooms[i]);
-                Debug.WriteLine(rooms[i]);
+                try
+                {
+                    rooms_to_index.Add(rooms[i].room_number, i);
+                    machineRoomCombo.Items.Add(rooms[i]);
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
             }
         }
 
@@ -248,11 +254,6 @@ namespace FitnessCenter
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void machineListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             refreshMachineDisplay();
@@ -261,16 +262,40 @@ namespace FitnessCenter
         private async void button6_Click(object sender, EventArgs e)
         {
             Machine selected_machine = (Machine)machineListBox.SelectedItem;
+            if (selected_machine == null)
+            {
+                Room room = (Room)machineRoomCombo.SelectedItem;
+                await conn.nonGetQuery($"UPDATE Machines " +
+                                       $"SET name = '{machineNameText.Text}', " +
+                                       $"status = '{statusTextBox.Text}', " +
+                                       $"room_number = {room.room_number} " +
+                                       $"WHERE machine_id = {selected_machine.machine_id};", false);
+                await refreshMachineDisplay();
+                int selected_machine_index = machineListBox.SelectedIndex;
+                await refreshMachineBox();
+                machineListBox.SelectedIndex = selected_machine_index;
+            }
+        }
+
+        private async void deleteMachineButton_Click(object sender, EventArgs e)
+        {
+            Machine selected_machine = (Machine)machineListBox.SelectedItem;
+            Debug.WriteLine(selected_machine);
+            if (selected_machine != null)
+            {
+                await conn.nonGetQuery($"DELETE FROM Machines WHERE machine_id =  {selected_machine.machine_id};", false);
+                await refreshMachineBox();
+                refreshMachineDisplay();
+            }
+        }
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
             Room room = (Room)machineRoomCombo.SelectedItem;
-            await conn.nonGetQuery($"UPDATE Machines " +
-                                   $"SET name = '{machineNameText.Text}', " +
-                                   $"status = '{statusTextBox.Text}', " +
-                                   $"room_number = {room.room_number}" +
-                                   $"WHERE machine_id = {selected_machine.machine_id};", false);
-            await refreshMachineDisplay();
-            int selected_machine_index = machineListBox.SelectedIndex;
+            await conn.nonGetQuery($"INSERT INTO Machines(name, status, room_number) " +
+                                   $"VALUES ('{machineNameText.Text}', '{statusTextBox.Text}', {room.room_number})", false);
             await refreshMachineBox();
-            machineRoomCombo.SelectedIndex = selected_machine_index;
+            machineListBox.SelectedIndex = machineListBox.Items.Count - 1;
         }
     }
 }

@@ -63,7 +63,7 @@
             billingIdLabel = new Label();
             billingsListBox = new ListBox();
             tabPage1 = new TabPage();
-            button3 = new Button();
+            deleteMachineButton = new Button();
             button5 = new Button();
             button6 = new Button();
             statusTextBox = new TextBox();
@@ -443,7 +443,7 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(button3);
+            tabPage1.Controls.Add(deleteMachineButton);
             tabPage1.Controls.Add(button5);
             tabPage1.Controls.Add(button6);
             tabPage1.Controls.Add(statusTextBox);
@@ -461,15 +461,15 @@
             tabPage1.Text = "Manage Building";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // deleteMachineButton
             // 
-            button3.Location = new Point(195, 395);
-            button3.Name = "button3";
-            button3.Size = new Size(75, 23);
-            button3.TabIndex = 61;
-            button3.Text = "Delete";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            deleteMachineButton.Location = new Point(195, 395);
+            deleteMachineButton.Name = "deleteMachineButton";
+            deleteMachineButton.Size = new Size(75, 23);
+            deleteMachineButton.TabIndex = 61;
+            deleteMachineButton.Text = "Delete";
+            deleteMachineButton.UseVisualStyleBackColor = true;
+            deleteMachineButton.Click += deleteMachineButton_Click;
             // 
             // button5
             // 
@@ -479,6 +479,7 @@
             button5.TabIndex = 60;
             button5.Text = "Create";
             button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // button6
             // 
@@ -663,7 +664,7 @@
         private Label label13;
         private ListBox machineListBox;
         private TextBox statusTextBox;
-        private Button button3;
+        private Button deleteMachineButton;
         private Button button5;
         private Button button6;
     }
