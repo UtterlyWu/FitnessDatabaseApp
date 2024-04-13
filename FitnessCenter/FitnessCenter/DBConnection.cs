@@ -767,5 +767,36 @@ namespace FitnessCenter
                 conn.Close();
             }
         }
+
+        public async Task<List<Room>> getRooms(string query)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = query;
+
+                var result = new List<Room>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Room(
+                        reader.GetInt32(reader.GetOrdinal("room_number")),
+                        reader.GetString(reader.GetOrdinal("name"))
+                    ));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ namespace FitnessCenter
         DBConnection conn;
         Dictionary<string, int> words_to_index;
         Dictionary<string, int> trainers_to_index;
+        Dictionary<int, int> rooms_to_index;
         public AdminForm(Admin admin)
         {
             InitializeComponent();
@@ -32,7 +34,20 @@ namespace FitnessCenter
                 { "Group"  , 1 }
             };
             trainers_to_index = new Dictionary<string, int>();
+            rooms_to_index = new Dictionary<int, int>();
+
             refreshSessionListBox();
+        }
+
+        public async Task loadRooms()
+        {
+            List<Room> rooms = await conn.getRooms("SELECT * FROM Rooms;");
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                rooms_to_index.Add(rooms[i].room_number, i);
+                machineRoomCombo.Items.Add(rooms[i]);
+                Debug.WriteLine(rooms[i]);
+            }
         }
 
         public async Task refreshSessionListBox()
@@ -123,6 +138,23 @@ namespace FitnessCenter
             }
         }
 
+        public async Task refreshMachineDisplay()
+        {
+            Machine selected_machine = (Machine)machineListBox.SelectedItem;
+            if (selected_machine != null)
+            {
+                machineNameText.Text = selected_machine.name;
+                machineRoomCombo.SelectedIndex = rooms_to_index[selected_machine.room_number];
+                statusTextBox.Text = selected_machine.status;
+            }
+            else
+            {
+                machineNameText.Text = "";
+                machineRoomCombo.SelectedIndex = 0;
+                statusTextBox.Text = "";
+            }
+        }
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -203,7 +235,7 @@ namespace FitnessCenter
             refreshDisplayedBilling();
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 1)
             {
@@ -211,6 +243,7 @@ namespace FitnessCenter
             }
             else if (tabControl1.SelectedIndex == 2)
             {
+                await loadRooms();
                 refreshMachineBox();
             }
         }
@@ -222,20 +255,22 @@ namespace FitnessCenter
 
         private void machineListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            refreshMachineDisplay();
+        }
+
+        private async void button6_Click(object sender, EventArgs e)
+        {
             Machine selected_machine = (Machine)machineListBox.SelectedItem;
-            if (selected_machine != null)
-            {
-                
-            }
-            else
-            {
-                billingIdLabel.Text = "Billing ID: ";
-                amountLabel.Text = "Amount: ";
-                memberLabel.Text = "Member: ";
-                cardNumberLabel.Text = "Card Number: ";
-                purposeLabel.Text = "Purpose: ";
-                dateLabel.Text = "Date: ";
-            }
+            Room room = (Room)machineRoomCombo.SelectedItem;
+            await conn.nonGetQuery($"UPDATE Machines " +
+                                   $"SET name = '{machineNameText.Text}', " +
+                                   $"status = '{statusTextBox.Text}', " +
+                                   $"room_number = {room.room_number}" +
+                                   $"WHERE machine_id = {selected_machine.machine_id};", false);
+            await refreshMachineDisplay();
+            int selected_machine_index = machineListBox.SelectedIndex;
+            await refreshMachineBox();
+            machineRoomCombo.SelectedIndex = selected_machine_index;
         }
     }
 }

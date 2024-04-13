@@ -63,20 +63,20 @@
             billingIdLabel = new Label();
             billingsListBox = new ListBox();
             tabPage1 = new TabPage();
-            label1 = new Label();
-            username = new Label();
-            name = new Label();
-            Logout = new Button();
-            machineListBox = new ListBox();
+            button3 = new Button();
+            button5 = new Button();
+            button6 = new Button();
+            statusTextBox = new TextBox();
             machineRoomCombo = new ComboBox();
             machineNameText = new TextBox();
             label11 = new Label();
             label12 = new Label();
             label13 = new Label();
-            statusTextBox = new TextBox();
-            button3 = new Button();
-            button5 = new Button();
-            button6 = new Button();
+            machineListBox = new ListBox();
+            label1 = new Label();
+            username = new Label();
+            name = new Label();
+            Logout = new Button();
             tabControl1.SuspendLayout();
             ScheduleClasses.SuspendLayout();
             Billings.SuspendLayout();
@@ -461,58 +461,47 @@
             tabPage1.Text = "Manage Building";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // button3
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(10, 30);
-            label1.Name = "label1";
-            label1.Size = new Size(77, 15);
-            label1.TabIndex = 1;
-            label1.Text = "Logged in as:";
+            button3.Location = new Point(195, 395);
+            button3.Name = "button3";
+            button3.Size = new Size(75, 23);
+            button3.TabIndex = 61;
+            button3.Text = "Delete";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
-            // username
+            // button5
             // 
-            username.AutoSize = true;
-            username.Location = new Point(10, 59);
-            username.Name = "username";
-            username.Size = new Size(59, 15);
-            username.TabIndex = 2;
-            username.Text = "username";
+            button5.Location = new Point(114, 395);
+            button5.Name = "button5";
+            button5.Size = new Size(75, 23);
+            button5.TabIndex = 60;
+            button5.Text = "Create";
+            button5.UseVisualStyleBackColor = true;
             // 
-            // name
+            // button6
             // 
-            name.AutoSize = true;
-            name.Location = new Point(10, 91);
-            name.Name = "name";
-            name.Size = new Size(38, 15);
-            name.TabIndex = 3;
-            name.Text = "label3";
+            button6.Location = new Point(33, 395);
+            button6.Name = "button6";
+            button6.Size = new Size(75, 23);
+            button6.TabIndex = 59;
+            button6.Text = "Save";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
-            // Logout
+            // statusTextBox
             // 
-            Logout.Location = new Point(10, 124);
-            Logout.Margin = new Padding(3, 2, 3, 2);
-            Logout.Name = "Logout";
-            Logout.Size = new Size(82, 22);
-            Logout.TabIndex = 4;
-            Logout.Text = "Logout";
-            Logout.UseVisualStyleBackColor = true;
-            // 
-            // machineListBox
-            // 
-            machineListBox.FormattingEnabled = true;
-            machineListBox.ItemHeight = 15;
-            machineListBox.Location = new Point(292, 39);
-            machineListBox.Name = "machineListBox";
-            machineListBox.Size = new Size(310, 379);
-            machineListBox.TabIndex = 0;
-            machineListBox.SelectedIndexChanged += machineListBox_SelectedIndexChanged;
+            statusTextBox.Location = new Point(33, 154);
+            statusTextBox.Multiline = true;
+            statusTextBox.Name = "statusTextBox";
+            statusTextBox.Size = new Size(235, 235);
+            statusTextBox.TabIndex = 58;
             // 
             // machineRoomCombo
             // 
             machineRoomCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             machineRoomCombo.FormattingEnabled = true;
-            machineRoomCombo.Items.AddRange(new object[] { "Single", "Group" });
             machineRoomCombo.Location = new Point(155, 82);
             machineRoomCombo.Name = "machineRoomCombo";
             machineRoomCombo.Size = new Size(100, 23);
@@ -555,41 +544,52 @@
             label13.TabIndex = 44;
             label13.Text = "Machine Name:";
             // 
-            // statusTextBox
+            // machineListBox
             // 
-            statusTextBox.Location = new Point(33, 154);
-            statusTextBox.Multiline = true;
-            statusTextBox.Name = "statusTextBox";
-            statusTextBox.Size = new Size(235, 235);
-            statusTextBox.TabIndex = 58;
+            machineListBox.FormattingEnabled = true;
+            machineListBox.ItemHeight = 15;
+            machineListBox.Location = new Point(292, 39);
+            machineListBox.Name = "machineListBox";
+            machineListBox.Size = new Size(310, 379);
+            machineListBox.TabIndex = 0;
+            machineListBox.SelectedIndexChanged += machineListBox_SelectedIndexChanged;
             // 
-            // button3
+            // label1
             // 
-            button3.Location = new Point(195, 395);
-            button3.Name = "button3";
-            button3.Size = new Size(75, 23);
-            button3.TabIndex = 61;
-            button3.Text = "Delete";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            label1.AutoSize = true;
+            label1.Location = new Point(10, 30);
+            label1.Name = "label1";
+            label1.Size = new Size(77, 15);
+            label1.TabIndex = 1;
+            label1.Text = "Logged in as:";
             // 
-            // button5
+            // username
             // 
-            button5.Location = new Point(114, 395);
-            button5.Name = "button5";
-            button5.Size = new Size(75, 23);
-            button5.TabIndex = 60;
-            button5.Text = "Create";
-            button5.UseVisualStyleBackColor = true;
+            username.AutoSize = true;
+            username.Location = new Point(10, 59);
+            username.Name = "username";
+            username.Size = new Size(59, 15);
+            username.TabIndex = 2;
+            username.Text = "username";
             // 
-            // button6
+            // name
             // 
-            button6.Location = new Point(33, 395);
-            button6.Name = "button6";
-            button6.Size = new Size(75, 23);
-            button6.TabIndex = 59;
-            button6.Text = "Save";
-            button6.UseVisualStyleBackColor = true;
+            name.AutoSize = true;
+            name.Location = new Point(10, 91);
+            name.Name = "name";
+            name.Size = new Size(38, 15);
+            name.TabIndex = 3;
+            name.Text = "label3";
+            // 
+            // Logout
+            // 
+            Logout.Location = new Point(10, 124);
+            Logout.Margin = new Padding(3, 2, 3, 2);
+            Logout.Name = "Logout";
+            Logout.Size = new Size(82, 22);
+            Logout.TabIndex = 4;
+            Logout.Text = "Logout";
+            Logout.UseVisualStyleBackColor = true;
             // 
             // AdminForm
             // 
