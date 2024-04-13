@@ -30,6 +30,7 @@
         {
             tabControl1 = new TabControl();
             ScheduleClasses = new TabPage();
+            Rooms = new ComboBox();
             typeComboBox = new ComboBox();
             button4 = new Button();
             deleteSessionButton = new Button();
@@ -46,7 +47,6 @@
             button1 = new Button();
             nameTextBox = new TextBox();
             dateTextBox = new TextBox();
-            roomTextBox = new TextBox();
             sessionListBox = new ListBox();
             label9 = new Label();
             sesLocationLabel = new Label();
@@ -77,6 +77,7 @@
             username = new Label();
             name = new Label();
             Logout = new Button();
+            ErrorText = new Label();
             tabControl1.SuspendLayout();
             ScheduleClasses.SuspendLayout();
             Billings.SuspendLayout();
@@ -98,6 +99,7 @@
             // 
             // ScheduleClasses
             // 
+            ScheduleClasses.Controls.Add(Rooms);
             ScheduleClasses.Controls.Add(typeComboBox);
             ScheduleClasses.Controls.Add(button4);
             ScheduleClasses.Controls.Add(deleteSessionButton);
@@ -114,7 +116,6 @@
             ScheduleClasses.Controls.Add(button1);
             ScheduleClasses.Controls.Add(nameTextBox);
             ScheduleClasses.Controls.Add(dateTextBox);
-            ScheduleClasses.Controls.Add(roomTextBox);
             ScheduleClasses.Controls.Add(sessionListBox);
             ScheduleClasses.Controls.Add(label9);
             ScheduleClasses.Controls.Add(sesLocationLabel);
@@ -130,6 +131,15 @@
             ScheduleClasses.TabIndex = 0;
             ScheduleClasses.Text = "Scheduling";
             ScheduleClasses.UseVisualStyleBackColor = true;
+            // 
+            // Rooms
+            // 
+            Rooms.FormattingEnabled = true;
+            Rooms.Location = new Point(128, 132);
+            Rooms.Margin = new Padding(3, 2, 3, 2);
+            Rooms.Name = "Rooms";
+            Rooms.Size = new Size(100, 23);
+            Rooms.TabIndex = 44;
             // 
             // typeComboBox
             // 
@@ -207,12 +217,13 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(8, 202);
+            label3.Location = new Point(6, 202);
             label3.Name = "label3";
             label3.Padding = new Padding(0, 10, 0, 15);
             label3.Size = new Size(98, 40);
             label3.TabIndex = 35;
             label3.Text = "Session Capacity:";
+            label3.Click += label3_Click;
             // 
             // label2
             // 
@@ -277,13 +288,6 @@
             dateTextBox.TabIndex = 26;
             dateTextBox.TextChanged += textBox3_TextChanged;
             // 
-            // roomTextBox
-            // 
-            roomTextBox.Location = new Point(128, 128);
-            roomTextBox.Name = "roomTextBox";
-            roomTextBox.Size = new Size(100, 23);
-            roomTextBox.TabIndex = 25;
-            // 
             // sessionListBox
             // 
             sessionListBox.FormattingEnabled = true;
@@ -317,12 +321,13 @@
             // sesDateLabel
             // 
             sesDateLabel.AutoSize = true;
-            sesDateLabel.Location = new Point(6, 82);
+            sesDateLabel.Location = new Point(8, 82);
             sesDateLabel.Name = "sesDateLabel";
             sesDateLabel.Padding = new Padding(0, 10, 0, 15);
             sesDateLabel.Size = new Size(76, 40);
             sesDateLabel.TabIndex = 17;
             sesDateLabel.Text = "Session Date:";
+            sesDateLabel.Click += sesDateLabel_Click;
             // 
             // sesTypeLabel
             // 
@@ -463,9 +468,10 @@
             // 
             // deleteMachineButton
             // 
-            deleteMachineButton.Location = new Point(195, 395);
+            deleteMachineButton.Location = new Point(202, 394);
+            deleteMachineButton.Margin = new Padding(3, 2, 3, 2);
             deleteMachineButton.Name = "deleteMachineButton";
-            deleteMachineButton.Size = new Size(75, 23);
+            deleteMachineButton.Size = new Size(66, 24);
             deleteMachineButton.TabIndex = 61;
             deleteMachineButton.Text = "Delete";
             deleteMachineButton.UseVisualStyleBackColor = true;
@@ -473,7 +479,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(114, 395);
+            button5.Location = new Point(121, 395);
             button5.Name = "button5";
             button5.Size = new Size(75, 23);
             button5.TabIndex = 60;
@@ -592,11 +598,21 @@
             Logout.Text = "Logout";
             Logout.UseVisualStyleBackColor = true;
             // 
+            // ErrorText
+            // 
+            ErrorText.AutoSize = true;
+            ErrorText.Location = new Point(12, 468);
+            ErrorText.Name = "ErrorText";
+            ErrorText.Size = new Size(12, 15);
+            ErrorText.TabIndex = 5;
+            ErrorText.Text = "/";
+            // 
             // AdminForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(765, 504);
+            Controls.Add(ErrorText);
             Controls.Add(Logout);
             Controls.Add(name);
             Controls.Add(username);
@@ -631,7 +647,6 @@
         private TextBox sesDescriptionTxt;
         private TextBox nameTextBox;
         private TextBox dateTextBox;
-        private TextBox roomTextBox;
         private Button button2;
         private Button button1;
         private TextBox trainerTextBox;
@@ -667,5 +682,7 @@
         private Button deleteMachineButton;
         private Button button5;
         private Button button6;
+        private ComboBox Rooms;
+        private Label ErrorText;
     }
 }

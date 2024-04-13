@@ -112,6 +112,40 @@ namespace FitnessCenter
 
         }
 
+        public async Task<List<Trainer>> getTrainers(string query)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = query;
+
+                var result = new List<Trainer>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Trainer(
+                        Username: reader.GetString(reader.GetOrdinal("username")),
+                        Password: reader.GetString(reader.GetOrdinal("pword")),
+                        First_name: reader.GetString(reader.GetOrdinal("first_name")),
+                        Last_name: reader.GetString(reader.GetOrdinal("last_name")),
+                        Trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id"))
+                    ));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
         public async Task<Trainer> getTrainer(string username)
         {
             try

@@ -22,6 +22,7 @@ namespace FitnessCenter
         Dictionary<string, int> words_to_index;
         Dictionary<string, int> trainers_to_index;
         Dictionary<int, int> rooms_to_index;
+        Dictionary<int, int> index_to_rooms;
         public AdminForm(Admin admin)
         {
             InitializeComponent();
@@ -35,24 +36,23 @@ namespace FitnessCenter
             };
             trainers_to_index = new Dictionary<string, int>();
             rooms_to_index = new Dictionary<int, int>();
-
+            index_to_rooms = new Dictionary<int, int>();
             refreshSessionListBox();
         }
 
-        public async Task loadRooms()
+        public async Task loadRooms1()
         {
             List<Room> rooms = await conn.getRooms("SELECT * FROM Rooms;");
-            for (int i = 0; i < rooms.Count; i++)
+            Rooms.Items.Clear();
+            rooms_to_index.Clear();
+            index_to_rooms.Clear();
+            for (int i = 0; i < rooms.Count(); i++)
             {
-                try
-                {
-                    rooms_to_index.Add(rooms[i].room_number, i);
-                    machineRoomCombo.Items.Add(rooms[i]);
-                }
-                catch (Exception e)
-                {
-                    continue;
-                }
+                Rooms.Items.Add(rooms[i].room_number);//Ari Code
+                machineRoomCombo.Items.Add(rooms[i]);
+                rooms_to_index.Add(rooms[i].room_number, i);
+                index_to_rooms.Add(i, rooms[i].room_number);
+                Debug.WriteLine(rooms[i]);
             }
         }
 
@@ -64,18 +64,20 @@ namespace FitnessCenter
             {
                 sessionListBox.Items.Add(session);
             }
+            await loadRooms1();
         }
 
         public async Task refreshDisplayedSession()
         {
             Session local_selected_session = (Session)sessionListBox.SelectedItem;
-            if (local_selected_session != null)
+            if (local_selected_session != null && await conn.getSessions($"SELECT * FROM Sessions WHERE session_id = {local_selected_session.session_id};") != null)
             {
+                Debug.WriteLine("Trying to get id " + local_selected_session.session_id);
                 Session selectedSession = (await conn.getSessions($"SELECT * FROM Sessions WHERE session_id = {local_selected_session.session_id};"))[0];
                 Trainer trainer = await conn.getTrainerByID(selectedSession.trainer_id);
                 nameTextBox.Text = selectedSession.name;
                 trainerTextBox.Text = trainer == null ? "" : trainer.username;
-                roomTextBox.Text = selectedSession.room_number.ToString();
+                Rooms.SelectedIndex = rooms_to_index[selectedSession.room_number];
                 typeComboBox.SelectedIndex = words_to_index[selectedSession.type];
                 sesDescriptionTxt.Text = selectedSession.description;
                 dateTextBox.Text = selectedSession.date;
@@ -91,7 +93,7 @@ namespace FitnessCenter
             {
                 nameTextBox.Text = "";
                 trainerTextBox.Text = "";
-                roomTextBox.Text = "";
+                Rooms.SelectedIndex = 0;
                 typeComboBox.SelectedIndex = 0;
                 sesDescriptionTxt.Text = "";
                 dateTextBox.Text = "";
@@ -161,6 +163,26 @@ namespace FitnessCenter
             }
         }
 
+        private async Task<bool> is_trainer_available(string username)
+        {
+            List<Trainer> trainer = await conn.getTrainers($"SELECT Trainers.* FROM Trainers NATURAL JOIN Availability WHERE Availability.date = '{dateTextBox.Text}'");
+            if (trainer == null || trainer.Count == 0)
+            {
+                ErrorText.Text = "Unavailable";
+                return false;
+            }
+            for (int i = 0; i < trainer.Count; i++)
+            {
+                if (trainer[i].username == username)
+                {
+                    ErrorText.Text = "/";
+                    return true;
+                }
+            }
+            ErrorText.Text = "Unavailable";
+            return false;
+        }
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -189,11 +211,14 @@ namespace FitnessCenter
         private async void button2_Click(object sender, EventArgs e)
         {
             Trainer trainer = await conn.getTrainer(trainerTextBox.Text);
-            await conn.nonGetQuery($"INSERT INTO Sessions(name, trainer_id, room_number, type, description, date, capacity) " +
-                                   $"VALUES ('{nameTextBox.Text}', {trainer.trainer_id}, {roomTextBox.Text}, '{typeComboBox.SelectedItem}', '{sesDescriptionTxt.Text}', '{dateTextBox.Text}', {capacityTextBox.Text})" +
-                                   $"RETURNING session_id;", false);
-            await refreshSessionListBox();
-            sessionListBox.SelectedIndex = sessionListBox.Items.Count - 1;
+            if (trainer != null && await is_trainer_available(trainer.username))
+            {
+                await conn.nonGetQuery($"INSERT INTO Sessions(name, trainer_id, room_number, type, description, date, capacity) " +
+                       $"VALUES ('{nameTextBox.Text}', {trainer.trainer_id}, {index_to_rooms[Rooms.SelectedIndex]}, '{typeComboBox.SelectedItem}', '{sesDescriptionTxt.Text}', '{dateTextBox.Text}', {capacityTextBox.Text})" +
+                       $"RETURNING session_id;", false);
+                await refreshSessionListBox();
+                sessionListBox.SelectedIndex = sessionListBox.Items.Count - 1;
+            }
         }
 
         private async void button4_Click(object sender, EventArgs e)
@@ -219,21 +244,25 @@ namespace FitnessCenter
 
         private async void button1_Click(object sender, EventArgs e)
         {
+
             Trainer trainer = await conn.getTrainer(trainerTextBox.Text);
             Session selected_session = (Session)sessionListBox.SelectedItem;
-            await conn.nonGetQuery($"UPDATE Sessions " +
-                                   $"SET name = '{nameTextBox.Text}', " +
-                                   $"trainer_id = {trainer.trainer_id}, " +
-                                   $"room_number = {roomTextBox.Text}, " +
-                                   $"type = '{typeComboBox.SelectedItem}', " +
-                                   $"description = '{sesDescriptionTxt.Text}', " +
-                                   $"date = '{dateTextBox.Text}', " +
-                                   $"capacity = {capacityTextBox.Text} " +
-                                   $"WHERE session_id = {selected_session.session_id};", false);
-            await refreshDisplayedSession();
-            int selected = sessionListBox.SelectedIndex;
-            await refreshSessionListBox();
-            sessionListBox.SelectedIndex = selected;
+            if (trainer != null && selected_session != null && await is_trainer_available(trainer.username)) 
+            {
+                await conn.nonGetQuery($"UPDATE Sessions " +
+                       $"SET name = '{nameTextBox.Text}', " +
+                       $"trainer_id = {trainer.trainer_id}, " +
+                       $"room_number = {index_to_rooms[Rooms.SelectedIndex]}, " +
+                       $"type = '{typeComboBox.SelectedItem}', " +
+                       $"description = '{sesDescriptionTxt.Text}', " +
+                       $"date = '{dateTextBox.Text}', " +
+                       $"capacity = {capacityTextBox.Text} " +
+                       $"WHERE session_id = {selected_session.session_id};", false);
+                await refreshDisplayedSession();
+                int selected = sessionListBox.SelectedIndex;
+                await refreshSessionListBox();
+                sessionListBox.SelectedIndex = selected;
+            }
         }
 
         private void billingsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -249,7 +278,6 @@ namespace FitnessCenter
             }
             else if (tabControl1.SelectedIndex == 2)
             {
-                await loadRooms();
                 refreshMachineBox();
             }
         }
@@ -262,7 +290,7 @@ namespace FitnessCenter
         private async void button6_Click(object sender, EventArgs e)
         {
             Machine selected_machine = (Machine)machineListBox.SelectedItem;
-            if (selected_machine == null)
+            if (selected_machine != null)
             {
                 Room room = (Room)machineRoomCombo.SelectedItem;
                 await conn.nonGetQuery($"UPDATE Machines " +
@@ -296,6 +324,16 @@ namespace FitnessCenter
                                    $"VALUES ('{machineNameText.Text}', '{statusTextBox.Text}', {room.room_number})", false);
             await refreshMachineBox();
             machineListBox.SelectedIndex = machineListBox.Items.Count - 1;
+        }
+
+        private void sesDateLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
