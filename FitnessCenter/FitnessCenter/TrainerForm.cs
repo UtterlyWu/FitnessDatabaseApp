@@ -59,7 +59,7 @@ namespace FitnessCenter
         {
 
             sessionListBox.Items.Clear();
-            List<Session> sessions = await conn.getSessions(new List<string> { "trainer_id" }, new List<string> { user.trainer_id.ToString() });
+            List<Session> sessions = await conn.getSessions($"SELECT * FROM Sessions WHERE trainer_id = {user.trainer_id}");
             if (sessions != null)
             {
                 for (int i = 0; i < sessions.Count; i++)

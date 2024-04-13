@@ -174,24 +174,14 @@ namespace FitnessCenter
             }
         }
 
-        public async Task<List<Session>> getSessions(List<string> arguments, List<string> values, string operator_t = "")
+        public async Task<List<Session>> getSessions(string query)
         {
             try
             {
                 await conn.OpenAsync();
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-
-                if (arguments.Count > 1 && values.Count > 1 && operator_t == "")
-                {
-                    operator_t = "AND";
-                }
-                string conditional = arguments.Count > 0 ? " WHERE" : "";
-                for (int i = 0; i < arguments.Count; i++)
-                {
-                    conditional += i - 1 == arguments.Count ? $" {arguments[i]} = {values[i]}" : $" {arguments[i]} = {values[i]} {operator_t}";
-                }
-                cmd.CommandText = $"SELECT * FROM public.Sessions{conditional}";
+                cmd.CommandText = query;
 
                 var result = new List<Session>();
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -282,7 +272,7 @@ namespace FitnessCenter
 
                 using var cmd = new NpgsqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = $"INSERT INTO public.billings(amount, member_id, card_number,date_paid,purpose) VALUES ({amount}, {member_id}, {cardnumber},'{currentDate}', {purpose})";
+                cmd.CommandText = $"INSERT INTO public.billings(amount, member_id, card_number,date_paid,purpose) VALUES ({amount}, {member_id}, {cardnumber},'{currentDate}', '{purpose}')";
                 cmd.ExecuteNonQuery();
                 return true;
             }
@@ -387,7 +377,7 @@ namespace FitnessCenter
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error adding data: " + ex.Message);
+                Console.WriteLine("Error executing: " + ex.Message);
                 return 0;
             }
             finally
@@ -695,6 +685,74 @@ namespace FitnessCenter
                     result.Add(new Availability(
                         date: reader.GetDateTime(reader.GetOrdinal("date")).ToString("yyyy-MM-dd"),
                         trainer_id: reader.GetInt32(reader.GetOrdinal("trainer_id"))
+                    ));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<List<Billing>> getBillings(string query)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = query;
+
+                var result = new List<Billing>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Billing(
+                        reader.GetFloat(reader.GetOrdinal("amount")),
+                        reader.GetInt32(reader.GetOrdinal("card_number")),
+                        reader.GetInt32(reader.GetOrdinal("bill_id")),
+                        reader.GetString(reader.GetOrdinal("purpose")),
+                        reader.GetInt32(reader.GetOrdinal("member_id")),
+                        reader.GetDateTime(reader.GetOrdinal("date_paid")).ToString("yyyy-MM-dd")
+                    ));
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching data: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public async Task<List<Machine>> getMachines(string query)
+        {
+            try
+            {
+                await conn.OpenAsync();
+                using var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = query;
+
+                var result = new List<Machine>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new Machine(
+                        reader.GetInt32(reader.GetOrdinal("machine_id")),
+                        reader.GetString(reader.GetOrdinal("name")),
+                        reader.GetString(reader.GetOrdinal("status")),
+                        reader.GetInt32(reader.GetOrdinal("room_number"))
                     ));
                 }
                 return result;

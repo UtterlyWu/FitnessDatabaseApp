@@ -40,9 +40,9 @@ VALUES
 
 INSERT INTO public.Sessions (trainer_id, room_number, type, name, description, date, capacity)
 VALUES
-    (1, 1, 'single', 'Morning Yoga', 'Relaxing yoga session to start your day', '2024-04-15', 20),
-    (2, 2, 'group', 'High-Intensity Interval Training', 'Intense cardio workout for fitness enthusiasts', '2024-04-16', 15),
-    (3, 3, 'group Training', 'Full Body Strength Workout', 'Strength training session focusing on all major muscle groups', '2024-04-17', 10);
+    (1, 1, 'Single', 'Morning Yoga', 'Relaxing yoga session to start your day', '2024-04-15', 20),
+    (2, 2, 'Group', 'High-Intensity Interval Training', 'Intense cardio workout for fitness enthusiasts', '2024-04-16', 15),
+    (3, 3, 'Group', 'Full Body Strength Workout', 'Strength training session focusing on all major muscle groups', '2024-04-17', 10);
 
 INSERT INTO public.Registrations (session_id, member_id)
 VALUES
