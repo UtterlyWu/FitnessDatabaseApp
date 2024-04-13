@@ -355,6 +355,8 @@ namespace FitnessCenter
             }
         }
 
+
+
         public async Task<Int32> nonGetQuery(string query, bool returning)
         {
             try

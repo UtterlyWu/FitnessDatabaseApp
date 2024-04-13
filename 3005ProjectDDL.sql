@@ -49,3 +49,8 @@ VALUES
     (1, 1),
 	(1, 2);
 
+INSERT INTO public.Availability (date,trainer_id)
+VALUES
+	('2024-04-15',1),
+	('2024-04-16',2),
+	('2024-04-17',3);

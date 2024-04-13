@@ -173,12 +173,20 @@ namespace FitnessCenter
             availabilityListBox.Items.Add(to_add);
         }
 
-        private void deleteTimeButton_Click(object sender, EventArgs e)
+        private async void deleteTimeButton_Click(object sender, EventArgs e)
         {
             Availability selected_availability = (Availability)availabilityListBox.SelectedItem;
             if (selected_availability != null)
             {
-                conn.nonGetQuery($"DELETE FROM Availability WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}", false);
+                List<Session> session = await conn.getSessions($"SELECT * FROM public.sessions WHERE date = '{selected_availability.date}'");
+                Debug.WriteLine(session);
+                if(session != null)
+                {
+                    Session s = session.FirstOrDefault();
+                    await conn.nonGetQuery($"DELETE FROM public.registrations WHERE session_id = {s.session_id}", false);
+                    await conn.nonGetQuery($"DELETE FROM public.sessions WHERE session_id = {s.session_id}", false);
+                    await conn.nonGetQuery($"DELETE FROM Availability WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}", false);
+                }
                 refresh_availability();
             }
         }
