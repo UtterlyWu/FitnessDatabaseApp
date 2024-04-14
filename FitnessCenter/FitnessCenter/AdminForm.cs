@@ -38,6 +38,8 @@ namespace FitnessCenter
             rooms_to_index = new Dictionary<int, int>();
             index_to_rooms = new Dictionary<int, int>();
             refreshSessionListBox();
+            username.Text = admin.username;
+            name.Text = $"{admin.first_name} {admin.last_name}";
         }
 
         public async Task loadRooms1()
@@ -247,7 +249,7 @@ namespace FitnessCenter
 
             Trainer trainer = await conn.getTrainer(trainerTextBox.Text);
             Session selected_session = (Session)sessionListBox.SelectedItem;
-            if (trainer != null && selected_session != null && await is_trainer_available(trainer.username)) 
+            if (trainer != null && selected_session != null && await is_trainer_available(trainer.username))
             {
                 await conn.nonGetQuery($"UPDATE Sessions " +
                        $"SET name = '{nameTextBox.Text}', " +
@@ -334,6 +336,13 @@ namespace FitnessCenter
         private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Logout_Click(object sender, EventArgs e)
+        {
+            LoginForm loginfrm = new LoginForm();
+            loginfrm.Show();
+            this.Close();
         }
     }
 }

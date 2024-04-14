@@ -178,14 +178,17 @@ namespace FitnessCenter
             Availability selected_availability = (Availability)availabilityListBox.SelectedItem;
             if (selected_availability != null)
             {
-                List<Session> session = await conn.getSessions($"SELECT * FROM public.sessions WHERE date = '{selected_availability.date}'");
-                Debug.WriteLine(session);
-                if(session != null)
+                List<Session> session = await conn.getSessions($"SELECT * FROM public.sessions WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}");
+                Debug.WriteLine(session.Count);
+                await conn.nonGetQuery($"DELETE FROM Availability WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}", false);
+                if (session != null && session.Count > 0)
                 {
-                    Session s = session.FirstOrDefault();
-                    await conn.nonGetQuery($"DELETE FROM public.registrations WHERE session_id = {s.session_id}", false);
-                    await conn.nonGetQuery($"DELETE FROM public.sessions WHERE session_id = {s.session_id}", false);
-                    await conn.nonGetQuery($"DELETE FROM Availability WHERE date = '{selected_availability.date}' AND trainer_id = {user.trainer_id}", false);
+                    foreach(Session sesh in session)
+                    {
+                        await conn.nonGetQuery($"DELETE FROM public.registrations WHERE session_id = {sesh.session_id}", false);
+                        await conn.nonGetQuery($"DELETE FROM public.sessions WHERE session_id = {sesh.session_id}", false);
+                    }
+                    
                 }
                 refresh_availability();
             }

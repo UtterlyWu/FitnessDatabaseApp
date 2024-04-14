@@ -249,6 +249,10 @@ namespace FitnessCenter
             }
             else
             {
+                if (!routinedict.ContainsKey(Routines.SelectedIndex))
+                {
+                    return;
+                }
                 selectedRoutine = routinedict[Routines.SelectedIndex];
             }
 

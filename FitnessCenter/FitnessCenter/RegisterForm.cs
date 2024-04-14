@@ -82,7 +82,7 @@ namespace FitnessCenter
                     ErrorText.Text = "username: " + username.Text + " taken";
                     return;
                 }
-                conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "trainers");
+                await conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "trainers");
                 Trainer q = await conn.getTrainer(username.Text);
                 TrainerForm trnform = new TrainerForm(q);
                 trnform.Show();
@@ -97,7 +97,7 @@ namespace FitnessCenter
                     ErrorText.Text = "username: " + username.Text + " taken";
                     return;
                 }
-                conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "adminstaff");
+                await conn.register(username.Text, password.Text, firstname.Text, lastname.Text, "adminstaff");
                 Admin a = await conn.getAdmin(username.Text);
                 AdminForm adminForm = new AdminForm(a);
                 adminForm.Show();
